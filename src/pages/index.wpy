@@ -1,0 +1,65 @@
+<style lang="less">
+.bottom-tabbar{
+  position: fixed;
+  bottom: -126rpx;
+  left: 0;
+}
+
+.tabbar-icon{
+   width: 152rpx;
+   height: 52rpx;
+   background-image: url('https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-up.png');
+   background-size: 100% 100%;
+   position: fixed;
+   left: 50%;
+   transform: translateX(-50%);
+   bottom: 0;
+}
+</style>
+<template>
+  <view class="container">
+      <tabBar class="bottom-tabbar" :animationData="animationData"></tabBar>
+      <view class="tabbar-icon" @tap="showTabBar"></view>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import tabBar from '../components/tabbar'
+  export default class Index extends wepy.page {
+
+    data = {
+       animationData:{}
+    }
+
+    components = {
+      tabBar: tabBar
+    }
+
+    computed = {
+ 
+    }
+
+    methods = {
+       showTabBar(){
+         let that = this;
+          var animation = wx.createAnimation({
+            duration: 1000,
+              timingFunction: 'ease',
+          })
+          animation.translate(30).step();
+          that.animationData = animation.export();
+       }
+    }
+
+
+
+    onLoad() {
+      let self = this
+
+    }
+    onShareAppMessage () {
+      return {};
+    }
+  }
+</script>

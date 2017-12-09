@@ -1,0 +1,150 @@
+<template>
+  <view class="tabbar" animation="{{animationData}}">
+       <view class="tabbar-top">
+           <image class="up" src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-down.png"></image>
+           <!-- <image class="up" wx:else src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-up.png"></image> -->
+       </view>
+       <view class="tabbar-box">
+         <navigator @tap="tap"
+                    wx:for="{{tabbar}}" 
+                    data-idx="{{index}}"
+                    url="" 
+                    wx:key="id"
+                    hover-class="active">
+                    <image wx:if="{{item.active}}" src="{{item.activeicon}}"></image>
+                    <image wx:else src="{{item.icon}}"></image>
+                    <text style="color:{{item.active?'#ff9500':'#fff'}}">{{item.text}}</text>
+         </navigator>
+       </view>
+  </view>
+</template>
+<script>
+import wepy from "wepy";
+export default class tabbar extends wepy.component {
+  data = {
+    tabShow:false,
+    animationData:{},
+    tabbar: [
+      {
+        icon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-teacher.png",
+        activeicon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-teacher-active.png",
+        text: "老师",
+        url: "",
+        active: false
+      },
+      {
+        icon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-music.png",
+        activeicon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-music-active.png",
+        text: "音乐",
+        url: "",
+        active: false
+      },
+      {
+        icon: "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-home.png",
+        activeicon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-home-active.png",
+        text: "主页",
+        url: "",
+        active: true
+      },
+      {
+        icon: "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-list.png",
+        activeicon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-list-active.png",
+        text: "排行榜",
+        url: "",
+        active: false
+      },
+      {
+        icon: "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-mine.png",
+        activeicon:
+          "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-mine-active.png",
+        text: "我的",
+        url: "",
+        active: false
+      }
+    ]
+  };
+  props = {};
+
+  methods = {
+    tap(e) {
+      let idx = e.currentTarget.dataset.idx;
+      let that = this;
+      let tabbar = that.tabbar;
+      tabbar.forEach(element => {
+        element.active = false;
+      });
+      console.log(tabbar);
+      tabbar[idx].active = true;
+      that.tabbar = tabbar;
+      that.$apply();
+      setTimeout(() => {
+        tabbar.forEach(element => {
+          element.active = false;
+        });
+        that.tabbar = tabbar;
+        that.$apply();
+      }, 300);
+    }
+  };
+  onLoad() {
+    console.log("show");
+  }
+}
+</script>
+
+<style lang="less">
+.container {
+  .tabbar {
+    width: 750rpx;
+    height: 186rpx;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 50rpx;
+    .tabbar-top {
+        display: flex;
+        justify-content: center;
+      .up {
+        width: 152rpx;
+        height: 52rpx;
+        margin: 0 auto;
+      }
+    }
+    .tabbar-box {
+      width: 750rpx;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0 60rpx;
+      navigator {
+        display: block;
+        width: 60rpx;
+        height: 60rpx;
+        background-size: 60rpx 60rpx;
+        position: relative;
+        image {
+          display: block;
+          width: 60rpx;
+          height: 60rpx;
+        }
+        text {
+          color: #fff;
+          font-size: 20rpx;
+          display: block;
+          text-align: center;
+          position: absolute;
+          bottom: -26rpx;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+</style>
