@@ -1,0 +1,58 @@
+<template>
+<view class="container">
+    <mySwiper></mySwiper>
+    <view class="nav-bar">
+        <view class="nav-item" wx:for="{{navbar}}" wx:key="id">{{item.text}}</view>
+    </view>
+    <teacherItem></teacherItem>
+</view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import tabBar from '../components/tabbar'
+  import mySwiper from '../components/swiper'
+  import teacherItem from '../components/teacherItem'
+  import api from '../utils/api.js'
+  import Tips from '../utils/tip.js'
+  import {wxRequest} from '../utils/wxRequest.js'
+  export default class Teacher extends wepy.page {
+      config = {
+          navigationBarTitleText:'老师'
+      }
+      data = {
+         navbar:[{
+            bg:"",
+            text:"老师频道",
+            id:1
+         },{
+            bg:"",
+            text:"官方频道",
+            id:2
+         }]
+      }
+      components = {
+          mySwiper:mySwiper,
+          teacherItem:teacherItem
+      }
+  }   
+</script>
+
+<style lang="less">
+.nav-bar{
+    display: flex;
+    justify-content: space-between;
+    padding:26rpx 32rpx;
+    margin:18rpx 0;
+    box-shadow: 0 0 8px rgba(0, 0, 0,.1);
+    .nav-item{
+        width: 326rpx;
+        height: 108rpx;
+        color: #fff;
+        line-height: 108rpx;
+        text-indent: 42rpx;
+        background: url('https://qncdn.playonwechat.com/banyeyinyue/teacher-image-navbg.png');
+        background-size: 100% 100%;
+    }
+}
+</style>

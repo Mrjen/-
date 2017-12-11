@@ -1,15 +1,18 @@
 <style lang="less">
 view{
   box-sizing: border-box;
+  font-size: 30rpx;
 }
 </style>
 
 <script>
 import wepy from 'wepy'
 import 'wepy-async-function'
+import {getUserMsg} from './utils/getUserMsg.js'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/teacher',
       'pages/index'
     ],
     window: {
@@ -30,7 +33,8 @@ export default class extends wepy.app {
   }
 
   onLaunch() {
-    this.testAsync()
+    this.testAsync();
+    getUserMsg();
   }
 
   sleep (s) {

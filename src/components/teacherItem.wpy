@@ -1,0 +1,34 @@
+<template>
+   <view class="item">
+       <solt class="teach-avatar"><image src="http://iph.href.lu/94x94"></image></solt>
+       <solt class="right">
+           <solt class="music-name">这里默认歌曲名称</solt>
+           <solt class="teacher-name">老师名称</solt>
+       </solt>
+   </view>
+</template>
+
+<script>
+import wepy from "wepy"
+export default class teacherItem extends wepy.component{
+    data = {
+
+    }
+}
+</script>
+
+<style lang="less">
+.item{
+    width: 100%;
+    .teach-avatar{
+        width:94rpx;
+        width:94rpx;
+        border:1px solid red;
+        image{
+            width:100%;
+            width:100%;
+            display: block;
+        }
+    }
+}
+</style>

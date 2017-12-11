@@ -1,0 +1,36 @@
+<style lang="less">
+@import '../style/base.less';
+
+</style>
+<template>
+  <view class="container">
+
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy'
+  export default class optionsBar extends wepy.component {
+    
+    data = {
+   
+    }
+
+    methods = {
+
+    }
+
+    async onShow(){
+      let that = this;
+
+    }
+
+    onLoad() {
+      let self = this
+
+    }
+    onShareAppMessage () {
+      return {};
+    }
+  }
+</script>

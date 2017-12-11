@@ -1,0 +1,58 @@
+//******布局样式******/
+.row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.row-center {
+    &:extend(.row);
+    justify-content: center;
+}
+
+.row-between {
+    &:extend(.row);
+    justify-content: space-between;
+}
+
+.row-around {
+    &:extend(.row);
+    justify-content: space-around;
+}
+
+.row-end {
+    &:extend(.row);
+    justify-content: flex-end;
+}
+
+.column {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.column-center {
+    &:extend(.column);
+    align-items: center;
+}
+
+.column-around {
+    &:extend(.column);
+    align-items: center;
+    justify-content: space-around;
+}
+
+.column-between {
+    &:extend(.column);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.container {
+    // &:extend(.column);
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom: 0;
+}

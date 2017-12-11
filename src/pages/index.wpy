@@ -1,11 +1,32 @@
 <style lang="less">
+@import '../style/base.less';
+.container{
+  background-size: 100% 100%;
+  position: absolute;
+  left: 0;
+  top:0;
+  width: 100%;
+  height: 100%;
+  border:1px solid transparent;
+}
+
+.body-bg{
+   position: absolute;
+   width:100%;
+   height: 100%;
+   left: 0;
+   top:0;
+   filter: blur(30px);
+   z-index: -1;
+}
+
 .bottom-tabbar{
   position: fixed;
-  bottom: -126rpx;
+  bottom: -186rpx;
   left: 0;
 }
 
-.tabbar-icon{
+.tabbar-icon-show{
    width: 152rpx;
    height: 52rpx;
    background-image: url('https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-up.png');
@@ -15,44 +36,305 @@
    transform: translateX(-50%);
    bottom: 0;
 }
+
+.tabbar-icon-hide{
+   width: 152rpx;
+   height: 52rpx;
+   background-image: url('https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-down.png');
+   background-size: 100% 100%;
+   position: fixed;
+   left: 50%;
+   transform: translateX(-50%);
+   bottom: 0;
+}
+
+.music-disc{
+  width: 498rpx;
+  height: 498rpx;
+  border-radius: 50%;
+  background: #151618;
+  margin:0 auto;
+  margin-top: 78rpx;
+  .progress-bg{
+    width: 438rpx;
+    height: 438rpx;
+    border:4rpx solid #3f3e44;
+    border-radius: 50%;
+  }
+  .progress{
+     width: 438rpx;
+     height: 438rpx;
+     border:4rpx solid #ff9500;
+     border-radius: 50%;
+  }
+  .avatarUrl{
+    width: 100%;
+    border-radius: 50%;
+    display: block;
+    flex-shrink: 0;
+  }
+  .cover{
+    width: 370rpx;
+    height: 370rpx; 
+    border-radius: 50%;
+    overflow:hidden;
+  }
+}
+
+.music-view{
+    .music-name{
+      text-align: center;
+      color:#fff;
+      padding-top: 60rpx;
+      margin-bottom:20rpx;
+    }
+    .lyrics{
+      width: 100%;
+      height: 200rpx;
+      overflow: hidden;
+    }
+    .lyrics-item{
+      text-align: center;
+      font-size: 24rpx;
+      line-height: 50rpx;
+      color:#fff;
+    }
+  }
+
+.option{
+  width: 526rpx;
+  height: 50rpx;
+  margin:0 auto;
+  padding:0 50rpx;
+  display: flex;
+  margin-top: 40rpx;
+  justify-content: space-between;
+  .option-btn{
+    width:50rpx;
+    height: 50rpx;
+     image{
+       display: block;
+       width: 50rpx;
+       height: 50rpx;
+     }
+  }
+}
+
+.kefu-btn{
+  width:50rpx;
+  height: 50rpx;
+  padding:0;
+  margin:0;
+  background:url('https://qncdn.playonwechat.com/banyeyinyue/icon-home-kefu.png');
+  background-size: 100% 100%;
+  position: fixed;
+  right: 50rpx;
+  top:50rpx;
+}
+
+.kefu-btn:after{
+  display: none;
+}
+
+.kefu-qipao{
+  width: 62rpx;
+  height: 50rpx;
+  background: url('https://qncdn.playonwechat.com/banyeyinyue/concant-us.png');
+  background-size: 100% 100%;
+  position: fixed;
+  top: 30rpx;
+  right: 90rpx;
+}
+
+.music-progress{
+  width: 648rpx;
+  height: 50rpx;
+  margin:20rpx auto;
+  color:#fff;
+  .bar-bg{
+     width: 510rpx;
+     height: 2px;
+     background: rgba(255, 255, 255, .6);
+     border-radius: 5px;
+     .bar{
+        height: 2px;
+        background: #ff9500;
+        position: relative;
+        border-radius: 5rpx;
+     }
+     .bar:before{
+        content:"";
+        display: block;
+        width: 28rpx;
+        height: 28rpx;
+        background:rgba(255, 255, 255, .6);
+        right:0;
+        top:0;
+        border-radius: 50%;
+        position: absolute;
+        margin-right: -12rpx;
+        transform: translate(-50%,-50%);
+     }
+     .bar:after{
+       content:"";
+       display: block;
+       width: 16rpx;
+       height: 16rpx;
+       background: #ff9500;
+       border-radius: 50%;
+       position: absolute;
+       right: 0;
+       top:0;
+       transform: translate(-50%,-50%);
+     }
+  }
+  .time{
+    font-size: 22rpx;
+  }
+}
+
+.music-option{
+   width:260rpx;
+   height: 50rpx;
+   display: flex;
+   justify-content: space-between;
+   margin:0 auto;
+   .option-btn{
+      width: 50rpx;
+      height: 50rpx;
+      image{
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+   }
+}
+
 </style>
 <template>
   <view class="container">
-      <tabBar class="bottom-tabbar" :animationData="animationData"></tabBar>
-      <view class="tabbar-icon" @tap="showTabBar"></view>
+      <tabbar class="bottom-tabbar" :animationData="animationData"></tabbar>
+
+      <view class="music-disc column-center">
+            <view class="progress-bg">
+                <view class="progress column-center">
+                    <view class="cover column-center">
+                       <image class="avatarUrl" mode="widthFix" src="{{music[0].cover}}"></image>
+                    </view>
+                </view>
+            </view>
+      </view>
+
+      <view class="music-view">
+          <view class="music-name">{{music[0].name}}</view>
+          <view class="lyrics">
+              <view wx:for="{{music[0].lyrics}}" 
+                    wx:key="id"
+                    class="lyrics-item">{{item}}</view>
+          </view>
+          <view class="options-bar">
+             
+          </view>
+      </view>
+
+      <image class="body-bg" src="{{music[0].cover}}"></image>
+      <button class="kefu-btn" open-type="concant"></button>
+      <view class="kefu-qipao"></view>
+
+      <view class="option">
+           <view class="option-btn">
+               <image wx:if="{{true}}" 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect.png"></image>
+               <image wx:else 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect-active.png"></image>
+           </view>
+           <view class="option-btn">
+               <image wx:if="{{true}}" 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-download.png"></image>
+               <image wx:else 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-download-active.png"></image>
+           </view>
+           <view class="option-btn">
+               <image wx:if="{{true}}"
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-share.png"></image>
+               <image wx:else 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-share-active.png"></image>
+           </view>
+           <view class="option-btn">
+               <image src="http://iph.href.lu/50x50"></image>
+           </view>
+       </view>
+
+       <view class="music-progress row-between">
+           <view class="time">01:45</view>
+           <view class="bar-bg">
+              <view class="bar" style="width:100rpx"></view>
+          </view>
+          <view class="time">03:23</view>
+       </view>
+
+       <view class="music-option">
+           <view class="option-btn">
+               <image src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-prev.png"></image>
+           </view>
+           <view class="option-btn">
+               <image wx:if="{{true}}" 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-play.png"></image>
+               <image wx:else 
+                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-pause.png"></image>
+           </view>
+           <view class="option-btn">
+               <image src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-next.png"></image>
+           </view>
+       </view>
   </view>
 </template>
 
 <script>
   import wepy from 'wepy'
   import tabBar from '../components/tabbar'
+  import api from '../utils/api.js'
+  import Tips from '../utils/tip.js'
+  import {wxRequest} from '../utils/wxRequest.js'
   export default class Index extends wepy.page {
+    
+    config = {
+       'disableScroll':true
+    }
 
     data = {
-       animationData:{}
+       animationData:{},
+       showTabBar:true,
+       music:[]
     }
+
+    props = {
+       animationData:{}
+    };
 
     components = {
-      tabBar: tabBar
+      tabbar: tabBar
     }
 
-    computed = {
- 
+    events = {
+
+    }
+
+    onReady(){
+      
     }
 
     methods = {
-       showTabBar(){
-         let that = this;
-          var animation = wx.createAnimation({
-            duration: 1000,
-              timingFunction: 'ease',
-          })
-          animation.translate(30).step();
-          that.animationData = animation.export();
-       }
+
     }
 
-
+    async onShow(){
+      let that = this;
+      let json =  await wxRequest({},api.test);
+      that.music = json.data.data.music;
+      that.$apply();
+      console.log(json.data.data.music)
+    }
 
     onLoad() {
       let self = this
