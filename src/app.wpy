@@ -12,6 +12,8 @@ import {getUserMsg} from './utils/getUserMsg.js'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/mine',
+      'pages/listbords',
       'pages/teacher',
       'pages/index'
     ],

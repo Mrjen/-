@@ -1,0 +1,462 @@
+<template>
+<view class="container">
+    <scroll-view class="scroll-view" scroll-y="true">
+    <view class="list">
+        <view class="list-nav">
+            <view wx:for="{{listnav}}" 
+                  wx:key="{{index}}"
+                  class="{{item.active?'active':''}}"
+                  data-idx="{{index}}"
+                  @tap="changeNav">{{item.text}}</view>
+        </view>
+
+        <view class="list-top">
+            <view class="second">
+               <view class="avatar"><image mode="widthFix" src="http://iph.href.lu/80x80"></image></view> 
+               <view class="flower">2260</view>
+               <view class="song-name">在梦里遇见你</view>
+            </view>
+            <view class="first">
+               <view class="avatar"><image mode="widthFix" src="http://iph.href.lu/80x80"></image></view> 
+               <view class="flower">2260</view>
+               <view class="song-name">在梦里遇见你</view>
+            </view>
+            <view class="third">
+               <view class="avatar"><image mode="widthFix" src="http://iph.href.lu/80x80"></image></view> 
+               <view class="flower">2260</view>
+               <view class="song-name">在梦里遇见你</view>
+            </view>
+        </view>
+
+        <view class="list-content">
+            <view class="list-item" 
+                  wx:for="{{list}}" 
+                  wx:key="{{index}}" 
+                  wx:if="{{index>3}}"  
+                  style="display:{{index<4?'none':'flex'}}">
+
+                <view class="item-left">
+                    <view class="item-index">{{index}}</view>
+                    <view class="item-avatar"><image mode="widthFix" src="{{item.avatar}}"></image></view>
+                    <view class="item-content">
+                        <view class="music-name">{{item.music}}</view>
+                        <view class="teacher-name">{{item.teachername}}</view>
+                    </view>
+                </view>
+                <view class="item-right">
+                     <view class="flower">{{item.flower}}</view>
+                </view>
+            </view>
+        </view>
+
+    </view>
+    </scroll-view>
+    <MusicBar class="list-music-bar" :currentMusic="currentMusic"></MusicBar>
+</view>
+</template>
+<script>
+  import wepy from 'wepy'
+  import tabBar from '../components/tabbar'
+  import MusicBar from '../components/musicBar'
+  import api from '../utils/api.js'
+  import Tips from '../utils/tip.js'
+  import {wxRequest} from '../utils/wxRequest.js'
+  export default class listBords extends wepy.page{
+       config = {
+           navigationBarTitleText:'排行榜'
+       }
+
+       components = {
+           MusicBar:MusicBar
+       }
+
+       data = {
+           currentMusic:{
+            status:false,
+            isplay:true,
+            background:'#fff',
+            isCollect:true,
+            name:"测试歌名",
+            author:"测试作者",
+            cover:"http://iph.href.lu/88x88?text=测试封面",
+            lyrics:['测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1',
+            '测试歌词1']
+           },
+           listnav:[{
+               text:'周榜',
+               id:1,
+               active:true
+           },{
+               text:'月榜',
+               id:1,
+               active:false
+           }],
+           list:[{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           },{
+               id:"1",
+               avatar:"http://iph.href.lu/80x80",
+               music:"下辈子我们要不要做夫妻",
+               teachername:"妮子老师",
+               flower:1600
+           }]
+       }
+
+       methods = {
+           changeNav(e){
+               let idx = e.currentTarget.dataset.idx;
+               let listnav = this.listnav;
+               listnav.forEach(element => {
+                   element.active = false;
+               });
+               listnav[idx].active = true;
+               this.listnav = listnav;
+               this.$apply();
+           }
+       }
+  } 
+</script>
+<style lang="less">
+.scroll-view{
+   display: block;
+   position: absolute;
+   width: 100%;
+   left: 0;
+   top: 0;
+   box-sizing: border-box;
+   flex:1;
+   height: 1100rpx;
+}
+
+page{
+    background: url('https://qncdn.playonwechat.com/banyeyinyue/list-bg.png');
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.container{
+    width: 750rpx;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.list-nav{
+    width:304rpx;
+    height: 46rpx;
+    margin:30rpx auto;
+    display: flex;
+    border:1px solid #fbd597;
+    border-radius: 40rpx;
+    view{
+        flex:1;
+        font-size: 24rpx;
+        text-align: center;
+        line-height: 46rpx;
+        color: #fff;
+    }
+    view:nth-of-type(1){
+        border-radius: 40rpx 0 0 40rpx;
+    }
+    view:nth-of-type(2){
+        border-radius:  0 40rpx 40rpx 0;
+    }
+    view.active{
+        background: #ffb400;
+        color: #333;
+    }
+}
+.list-top{
+    display: flex;
+    justify-content: space-between;
+    padding:0 75rpx;
+    .avatar{
+      width:200rpx;
+      min-height: 200rpx;
+    }
+    .flower{
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color:#ffa100;
+        margin:10rpx 0;
+        font-size: 34rpx;
+    }
+    .flower:after{
+        content:" ";
+        display: block;
+        width:13rpx;
+        height: 28rpx;
+        background-image:url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-flower.png');
+        background-repeat: no-repeat;
+        background-size: 13rpx 28rpx;
+        margin-left: 10rpx;
+    }
+    .second .avatar{
+        background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-second.png');
+        background-size: 114rpx 178rpx;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        image{
+            display: block;
+            width: 82rpx;
+            margin:0 auto;
+            margin-bottom: 5rpx;
+            border-radius: 50%;
+        }
+    }
+    .first .avatar{
+        background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-first.png');
+        background-size: 114rpx 178rpx;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        image{
+            display: block;
+            width: 106rpx;
+            margin:0 auto;
+            margin-bottom: 5rpx;
+            border-radius: 50%;
+        }
+    }
+    .third .avatar{
+        background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-thrid.png');
+        background-size: 114rpx 178rpx;
+        background-repeat: no-repeat;
+        background-position: bottom center;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        image{
+            display: block;
+            width: 82rpx;
+            margin:0 auto;
+            margin-bottom: 5rpx;
+            border-radius: 50%;
+        }
+    }
+    .song-name{
+        color: #fff;
+        font-size: 22rpx;
+        text-align: center;
+        max-width: 200rpx;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+
+.list-content{
+    width:750rpx;
+    padding-top: 60rpx;
+    .list-item{
+        width:100%;
+        padding:24rpx 60rpx;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        .item-avatar{
+            width: 80rpx;
+            height: 80rpx;
+            border-radius: 50%;
+            overflow: hidden;
+            image{
+                display: block;
+                width: 80rpx;
+            }
+        }
+        .item-left{
+            display: flex;
+            align-items: center;
+        }
+        .item-index{
+            font-size: 34rpx;
+            margin-right: 14rpx;
+            color:#fff;
+            font-weight: bold;
+            width:50rpx;
+            text-align: center;
+        }
+    }
+    .list-item:nth-of-type(1):before{
+        content:" ";
+        display: block;
+        width: 100%;
+        border-bottom:1px solid rgba(255, 255, 255, .5);
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform: scaleY(.5);
+    }
+    .list-item:after{
+        content:" ";
+        display: block;
+        width: 100%;
+        border-bottom:1px solid rgba(255, 255, 255, .5);
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        transform: scaleY(.5);
+    }
+    .item-content{
+        padding-left: 20rpx;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+        .music-name{
+             font-size: 26rpx;
+             margin-bottom: 10rpx;
+             color:#fff;
+        }
+        .teacher-name{
+            font-size: 22rpx;
+            color:#c7c5c7;
+        }
+    }
+    .item-right{
+        display: flex;
+        align-items: center;
+        color:#ffa100;
+        .flower{
+            display: flex;
+            align-items: center;
+            font-size: 34rpx;
+        }
+        .flower:after{
+            content:" ";
+            display: block;
+            width:13rpx;
+            height: 28rpx;
+            margin-left: 10rpx;
+            background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-flower.png');
+            background-size: 13rpx 28rpx;
+        }
+    }
+}
+
+.list-music-bar{
+    position: fixed;
+    left: 0;
+    bottom:0;
+}
+
+</style>

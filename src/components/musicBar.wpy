@@ -1,0 +1,165 @@
+<template>
+  <view class="music-bar">
+      <solt class="bar-inner" 
+            style="background:{{currentMusic.background}}">
+          <view class="music-cover">
+              <image mode="widthFix" 
+                     src="{{currentMusic.cover}}"></image></view>
+          <view class="music-info">
+              <view class="info">
+                  <view class="music-name"
+                        style="color:{{currentMusic.background=='#fff'?'#000':'#fff'}}">{{currentMusic.name}}</view>
+                  <view class="music-author">{{currentMusic.author}}</view>
+              </view>
+              <view class="option-view">
+                  <!-- {{currentMusic.background==='#fff'?'true':'false'}} -->
+                  <block>
+                    <view class="play-view baidiplay" wx:if="{{currentMusic.background=='#fff'?true:false}}">
+                        <image wx:if="{{currentMusic.isplay}}" 
+                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-pause.png">
+                        </image>
+                        <image wx:else 
+                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-pause.png">
+                        </image>
+                    </view>
+
+                    <view class="play-view baidipause" wx:else>
+                        <image wx:if="{{currentMusic.isplay}}" 
+                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-pause.png">
+                        </image>
+                        <image wx:else
+                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-play.png">
+                        </image> 
+                    </view>
+                  </block>
+
+                  <block>
+                        <view class="play-view baidicollect" wx:if="{{currentMusic.background==='#fff'?true:false}}">
+                            <image wx:if="{{currentMusic.isCollect}}" 
+                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect.png">
+                            </image>
+                            
+                            <image wx:else 
+                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png">
+                            </image>
+                        </view>
+
+                        <view class="play-view heidicollect" wx:else>
+                            <image wx:if="{{currentMusic.isCollect}}"
+                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png">
+                            </image>
+
+                            <image wx:else  
+                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-collect.png">
+                            </image>
+                        </view>
+                  </block>
+              </view>
+          </view>
+      </solt>
+  </view>
+</template>
+
+<script>
+import wepy from "wepy"
+export default class MusicBar extends wepy.component{
+    data = {
+    //    currentMusic:{
+    //        status:true,
+    //        background:'#fff',
+    //        name:"测试歌名",
+    //        author:"测试作者",
+    //        cover:"http://iph.href.lu/88x88?text=测试封面",
+    //        lyrics:['测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1',
+    //        '测试歌词1']
+    //    }
+    }
+
+    props = {
+        currentMusic:{}
+    }
+}  
+</script>
+
+<style lang="less">
+.music-bar{
+    width: 750rpx;
+    height: 130rpx;
+    box-sizing: border-box;
+}
+.bar-inner{
+    width: 750rpx;
+    height: 130rpx;
+    display: flex;
+    align-items: center;
+    padding:0 20rpx;
+    padding-right: 30rpx;
+    box-sizing: border-box;
+    .music-cover{
+        width: 88rpx;
+        height: 88rpx;
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10rpx;
+        overflow: hidden;
+        margin-right: 20rpx;
+        image{
+            display: block;
+            width:100%;
+        }
+    }
+    .music-info{
+        display: flex;
+        align-items: center;
+        flex:1;
+        .info{
+            flex:1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .music-name,.music-author{
+                text-overflow: ellipsis;
+                overflow: hidden;
+                white-space: nowrap;
+                max-width: 450rpx;
+            }
+            .music-name{
+                font-size: 28rpx;
+            }
+            .music-author{
+                font-size: 24rpx;
+                color: #8f8e94;
+            }
+        }
+    }
+    .option-view{
+        width:150rpx;
+        display: flex;
+        justify-content: space-between;
+        .play-view{
+            image{
+                display: block;
+                width: 60rpx;
+                height: 60rpx;
+            }
+        }
+    }
+}
+</style>

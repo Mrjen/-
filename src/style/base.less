@@ -56,3 +56,30 @@
     position: fixed;
     bottom: 0;
 }
+
+// border
+.border-bottom:before{
+    content:" ";
+    display: block;
+    width: 100%;
+    border-bottom:1px solid #eee;
+    transform: translateY(.5);
+    overflow: hidden;
+    transform-origin: 0 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.border-top:after{
+    content:" ";
+    display: block;
+    width: 100%;
+    border-bottom:1px solid #eee;
+    transform: translateY(.5);
+    overflow: hidden;
+    transform-origin: 0 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+}

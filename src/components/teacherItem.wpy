@@ -1,6 +1,6 @@
 <template>
-   <view class="item">
-       <solt class="teach-avatar"><image src="http://iph.href.lu/94x94"></image></solt>
+   <view class="item border_bottom">
+       <solt class="teach-avatar"><image mode="widthFix" src="http://iph.href.lu/94x94"></image></solt>
        <solt class="right">
            <solt class="music-name">这里默认歌曲名称</solt>
            <solt class="teacher-name">老师名称</solt>
@@ -18,17 +18,63 @@ export default class teacherItem extends wepy.component{
 </script>
 
 <style lang="less">
+@import '../style/base.less';
 .item{
     width: 100%;
+    display: flex;
+    padding: 20rpx 30rpx;
+    position: relative;
     .teach-avatar{
         width:94rpx;
-        width:94rpx;
-        border:1px solid red;
+        height:94rpx;
+        border-radius: 50%;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 20rpx;
         image{
-            width:100%;
-            width:100%;
+            width:94rpx;
+            border-radius: 50%;
             display: block;
         }
     }
+    .right{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding:6rpx 0;
+        .teacher-name{
+            font-size: 24rpx;
+            color: #808080;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .music-name{
+           color: #333;
+        }
+        .teacher-name:before{
+           content:" ";
+           display: block;
+           width: 20rpx;
+           height: 20rpx;
+           background: url('https://qncdn.playonwechat.com/banyeyinyue/icon-teacher-audio.png');
+           background-size: 100% 100%;
+           margin-right: 14rpx;
+        }
+    }
+}
+.item:before{
+    content:" ";
+    display: block;
+    width: 100%;
+    border-bottom:1px solid #dedfe0;
+    transform: scaleY(.5);
+    overflow: hidden;
+    transform-origin: 0 0;
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
 </style>
