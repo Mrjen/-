@@ -64,30 +64,7 @@
 import wepy from "wepy"
 export default class MusicBar extends wepy.component{
     data = {
-    //    currentMusic:{
-    //        status:true,
-    //        background:'#fff',
-    //        name:"测试歌名",
-    //        author:"测试作者",
-    //        cover:"http://iph.href.lu/88x88?text=测试封面",
-    //        lyrics:['测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1',
-    //        '测试歌词1']
-    //    }
+
     }
 
     props = {

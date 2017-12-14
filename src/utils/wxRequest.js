@@ -7,7 +7,11 @@ const wxRequest = (params={},url) => {
             icon:'loading'
         });
         let data = params.query || {};
-        data.sign = 'SIGN';
+
+        let extConfig = wx.getExtConfigSync ? wx.getExtConfigSync() : {}
+        console.log("kid",extConfig.kid)
+        data.kid = extConfig.kid?extConfig.kid:'497';
+
         let Cookie = wx.getStorageSync('Cookie');
         console.log('cookie',Cookie);
         var args = {
@@ -18,7 +22,7 @@ const wxRequest = (params={},url) => {
                 try{
                     let mode = /(PHPSESSID=.*);/;
                     let cookie = res.header['Set-Cookie'].match(mode)[1];
-                    
+                    console.log(cookie)
                     wx.setStorageSync('Cookie', cookie);
                 }catch(e){
 

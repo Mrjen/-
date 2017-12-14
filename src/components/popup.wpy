@@ -1,0 +1,141 @@
+<template>
+<view class="popup"  @tap="closePopup" wx:if="{{PopupShow}}" animation="{{animatePopup}}">
+   <solt class="content" >
+      <view class="tip">歌曲:Because I Love You (正在播放歌曲)</view>
+      <view class="option">
+          <view class="popup-item" @tap="nextMusic">
+              <view class="popup-icon">
+                  <image src="https://qncdn.playonwechat.com/banyeyinyue/popup-icon-next.png"></image>
+              </view>
+              <view class="popup-text">下一首</view>
+          </view>
+          <view class="popup-item" @tap="collectMusic">
+              <view class="popup-icon">
+                  <image src="https://qncdn.playonwechat.com/banyeyinyue/popup-icon-collect.png"></image>
+              </view>
+              <view class="popup-text">收藏到歌曲</view>
+          </view>
+          <view class="popup-item" @tap="downloadMusic">
+              <view class="popup-icon">
+                  <image src="https://qncdn.playonwechat.com/banyeyinyue/popup-icon-download.png"></image>
+              </view>
+              <view class="popup-text">下载</view>
+          </view>
+          <view class="popup-item" @tap="shareMusic">
+              <view class="popup-icon">
+                  <image src="https://qncdn.playonwechat.com/banyeyinyue/popup-icon-share.png"></image>
+              </view>
+              <view class="popup-text">分享</view>
+          </view>
+          <view class="popup-item" @tap="deleteMusic">
+              <view class="popup-icon">
+                  <image src="https://qncdn.playonwechat.com/banyeyinyue/popup-icon-delete.png"></image>
+              </view>
+              <view class="popup-text">删除</view>
+          </view>
+      </view>
+   </solt>
+</view>
+</template>
+
+<script>
+import wepy from "wepy"
+export default class popup extends wepy.component {
+    data = {
+        animatePopup:{},
+        popup:[{
+            icon:"",
+            text:"下一首播放"
+        },{
+            icon:"",
+            text:"收藏到歌单"
+        },{
+            icon:"",
+            text:"下载"
+        },{
+            icon:"",
+            text:"分享"
+        },{
+            icon:"",
+            text:"删除"
+        }]
+    }
+
+    props = {
+        popupData:{},
+        animatePopup:{},
+        PopupShow:{
+            type: Boolean,
+            default:true,
+            twoWay: true
+        }
+    }
+
+    methods = {
+        nextMusic(){
+           console.log("下一曲")
+        },
+        collectMusic(){
+           console.log("收藏这首歌")
+        },
+        downloadMusic(){
+           console.log("下载这首歌")
+        },
+        shareMusic(){
+           console.log("分享歌曲")
+        },
+        deleteMusic(){
+           console.log("删除歌曲")
+        }
+        
+    }
+  
+      closePopup(){
+            console.log("关闭操作窗")
+            // this.PopupShow = false;
+            // this.$apply();
+            // this.$parent.PopupisShow = false;
+            this.$emit('mineColse',false)
+        }
+
+    onLoad(){
+        console.log("onLoad")
+    }
+}
+</script>
+
+<style lang="less">
+.popup{
+    width:750rpx;
+    overflow: hidden;
+    background: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 8rpx rgba(0,0,0,.1);
+    .content{
+        background:#fff;
+        display: block;
+        padding:20rpx 30rpx;
+    }
+    .tip{
+        height: 60rpx;
+        font-size:26rpx;
+        color: #666;
+    }
+    .popup-item{
+        display: flex;
+        height: 70rpx;
+        align-items: center;
+    }
+    .popup-icon{
+        image{
+            display: block;
+            width: 50rpx;
+            height: 50rpx;
+            margin-right: 20rpx;
+        }
+    }
+    .popup-text{
+        font-size: 28rpx;
+        color: #333;
+    }
+}
+</style>

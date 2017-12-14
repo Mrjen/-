@@ -1,7 +1,8 @@
 // 主域名
 const apiUrl = "https://utest.playonwechat.com"
+const mock = "https://easy-mock.com/mock/5a2e35eee576811460c0f506/banyeyinyue/home"
 
-const test = 'https://easy-mock.com/mock/5a2e35eee576811460c0f506/banyeyinyue/home'
+const test = 'https://utest.playonwechat.com/music/App/home?kid=459'
 
 // 授权
 const auth = apiUrl +  '/music/App/registry'
@@ -27,6 +28,7 @@ const songPlayCount = apiUrl + '/music/App/play'
 
 
 module.exports = {
+    mock,
     test,
     Home,
     auth,

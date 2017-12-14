@@ -12,14 +12,16 @@ import {getUserMsg} from './utils/getUserMsg.js'
 export default class extends wepy.app {
   config = {
     pages: [
+      'pages/index',
+      'pages/musicList',
       'pages/mine',
       'pages/listbords',
-      'pages/teacher',
-      'pages/index'
+      'pages/teacher'
+      
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#333',
+      navigationBarBackgroundColor: '#000',
       navigationBarTitleText: '半夜音乐',
       navigationBarTextStyle: 'white'
     }

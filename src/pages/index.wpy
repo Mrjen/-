@@ -261,7 +261,7 @@
                       src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-share-active.png"></image>
            </view>
            <view class="option-btn">
-               <image src="http://iph.href.lu/50x50"></image>
+               <image src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect-flower.png"></image>
            </view>
        </view>
 
@@ -296,6 +296,7 @@
   import api from '../utils/api.js'
   import Tips from '../utils/tip.js'
   import {wxRequest} from '../utils/wxRequest.js'
+  import  {playMusic} from '../utils/playMusic.js'
   export default class Index extends wepy.page {
     
     config = {
@@ -330,15 +331,33 @@
 
     async onShow(){
       let that = this;
-      let json =  await wxRequest({},api.test);
-      that.music = json.data.data.music;
-      that.$apply();
-      console.log(json.data.data.music)
+      
     }
 
-    onLoad() {
-      let self = this
-
+    async onLoad() {
+      let that = this;
+      let json =  await wxRequest({},api.Home);
+      let music = json.data.data.music;
+      that.music = that.$apply();
+      that.$apply();
+      console.log(playMusic)
+      playMusic(
+        {
+           oldList:"",
+           newList:music,
+           changeList:true,
+           idx:0,
+           cycle:true,
+           Dom:that,
+           Next:0
+        }
+       )
+      console.log(json.data.data.music)
+      // let json = await wxRequest({},api.test);
+      // console.log("home",json.data)
+      // let music = json.data;
+      // that.music = music;
+      // that.$apply();
     }
     onShareAppMessage () {
       return {};
