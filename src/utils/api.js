@@ -11,7 +11,9 @@ const Home = apiUrl + '/music/App/home'
 // 收藏歌曲
 const Collect = apiUrl + '/music/App/collection'
 // 取消收藏
-const disCollect = apiUrl + '/music/App/disCollection'   
+const disCollect = apiUrl + '/music/App/disCollection'  
+// 点击添加人气
+const Addflower = apiUrl + '/music/App/flower'
 // 我的收藏
 const myCollect = apiUrl + '/music/App/myCollection'
 // 收听排行榜
@@ -34,6 +36,7 @@ module.exports = {
     auth,
     Collect,
     disCollect,
+    Addflower,
     myCollect,
     Ranking,
     statAd,

@@ -13,14 +13,33 @@ currentData = {
 
 function playMusic(currentData){
     let oldList = currentData.oldList;
+    let newList = currentData.newList?currentData.newList:oldList;
     let i = currentData.idx || 0;
     let changeList = currentData.changeList;
     let cycle = currentData.cycle;
     if(changeList){
         console.log("切换列表")
         wx.playBackgroundAudio({
-            dataUrl: oldList[i].audio,
-            title: oldList[i].name
+            dataUrl: newList[i].audio,
+            title: newList[i].name,
+            success(res){
+                wx.onBackgroundAudioStop(function(){
+                    let midx = wx.getStorageSync('midx');
+                    midx = (midx+1===newList.length)?0:(midx+1);
+                    let currentMusic = newList[midx];
+                    wx.setStorageSync('currentMusic',currentMusic)
+                    wx.playBackgroundAudio({
+                        dataUrl:newList,
+                        title:""
+                    })
+                })
+            }
+        });
+    }else{
+        console.log("不切换列表");
+        wx.playBackgroundAudio({
+            dataUrl: newList[i].audio,
+            title: newList[i].name
         });
     }
 }

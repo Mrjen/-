@@ -9,6 +9,8 @@ view{
 import wepy from 'wepy'
 import 'wepy-async-function'
 import {getUserMsg} from './utils/getUserMsg.js'
+import {wxRequest} from './utils/wxRequest.js'
+import api from './utils/api.js'
 export default class extends wepy.app {
   config = {
     pages: [
@@ -39,6 +41,12 @@ export default class extends wepy.app {
   onLaunch() {
     this.testAsync();
     getUserMsg();
+    wx.login({
+      success: function(res){
+        // success
+        wxRequest({query:{code:res.code}},api.auth);
+      }
+    })
   }
 
   sleep (s) {

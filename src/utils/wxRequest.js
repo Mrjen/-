@@ -13,7 +13,7 @@ const wxRequest = (params={},url) => {
         data.kid = extConfig.kid?extConfig.kid:'497';
 
         let Cookie = wx.getStorageSync('Cookie');
-        console.log('cookie',Cookie);
+        // console.log('cookie',Cookie);
         var args = {
             url:url,
             data:data,
