@@ -1,0 +1,326 @@
+<template>
+<view class="teacher-container">
+    <mySwiper></mySwiper>
+    <view class="nav-bar">
+        <view wx:for="{{navbar}}"
+              class="nav-item {{item.active?'active':''}}" 
+              @tap="changeNav"
+              data-id="{{item.id}}"
+              data-idx="{{index}}"
+              wx:key="id">{{item.text}}</view>
+    </view>
+ 
+    <view class="nav-title">
+        <view class="title">推荐用户</view>
+        <view class="title-tip">推荐用户</view>
+    </view>
+    <!-- 老师列表 -->
+    <view class="teacher-list" wx:if="{{navbar[0].active}}">
+        <view class="teach-item" 
+              wx:for="{{childtearchData}}"
+              wx:key="{{index}}"
+              data-id="{{item.id}}"
+              @tap="toTeachDeatil">
+             <view class="item-left">
+                 <view class="teach-avatar">
+                    <image mode="widthFix" src="{{item.avatar}}"></image>
+                 </view>
+                 <view class="right">
+                   <view class="music-name">{{item.music_name}}</view>
+                   <view class="teacher-name">{{item.teacher_name}}</view>
+                 </view>
+            </view>
+            <view class="collect-teach">
+                <image wx:if="{{item.teacher_collected}}"
+                       data-id="{{item.id}}"
+                       data-idx="{{index}}"
+                       @tap="romeCollectTeacher"
+                       src="https://qncdn.playonwechat.com/banyeyinyue/popup-icon-collect.png"></image>
+
+                <image wx:else
+                       @tap="collectTeacher"
+                       data-id="{{item.id}}"
+                       data-idx="{{index}}"
+                       src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-collect.png"></image>
+                
+            </view>    
+        </view>
+    </view>
+
+    <view class="teacher-list" wx:if="{{navbar[1].active}}">
+        <view class="teach-item" 
+              wx:for="{{officialData}}"
+              wx:key="{{index}}"
+              data-id="{{item.id}}"
+              @tap="toTeachDeatil">
+             <view class="teach-avatar">
+                 <image mode="widthFix" src="{{item.cover}}"></image>
+             </view>
+             <view class="right">
+                 <view class="music-name">{{item.music_name}}</view>
+                 <view class="teacher-name">{{item.teacher_name}}</view>
+             </view>
+        </view>
+    </view>
+
+ <musicBar class="teach-music-bar"></musicBar>
+
+</view>
+</template>
+
+<script>
+import wepy from "wepy";
+import tabBar from "../components/tabbar";
+import mySwiper from "../components/swiper";
+import teacherItem from "../components/teacherItem";
+import musicBar from "../components/musicBar";
+import api from "../utils/api.js";
+import Tips from "../utils/tip.js";
+import { wxRequest } from "../utils/wxRequest.js";
+export default class Teacher extends wepy.component {
+  config = {
+    navigationBarTitleText: "老师"
+  };
+
+  props = {
+    childtearchData: {
+      twoWay: true
+    },
+    teachNav: {
+      twoWay: true
+    }
+  };
+
+  data = {
+    navbar: [
+      {
+        bg: "",
+        text: "老师频道",
+        id: 1,
+        active: true
+      },
+      {
+        bg: "",
+        text: "官方频道",
+        id: 2,
+        active: false
+      }
+    ],
+    childtearchData: [],
+    officialData: []
+  };
+
+  components = {
+    mySwiper: mySwiper,
+    teacherItem: teacherItem,
+    musicBar: musicBar
+  };
+
+  methods = {
+    //   进入老师详情页
+    childtearchData(e) {
+      console.log("老师id", e.currentTarget.dataset.id);
+      wx.navigateTo({
+        url: "../pages/teacherMusicList?id=" + e.currentTarget.dataset.id
+      });
+    },
+    // 老师频道，官方频道切换
+    changeNav(e) {
+      let that = this;
+      let idx = e.currentTarget.dataset.idx;
+      let id = e.currentTarget.dataset.id;
+      let navbar = that.navbar;
+      navbar.map((element, index) => {
+        element.active = false;
+      });
+      this.$parent.teachNav = id;
+      this.$parent.page = 1;
+      console.log(this.$parent, this.$parent.teachNav);
+      navbar[idx].active = true;
+      that.navbar = navbar;
+      that.$apply();
+    },
+    // 去老师页面
+    toTeachDeatil(e){
+       let id = e.currentTarget.dataset.id;
+       wx.navigateTo({
+         url: '../pages/teacherMusicList?id='+id
+        })
+    },
+
+    // 收藏老师
+    async collectTeacher(e){
+        console.log(e)
+        let that = this;
+        let id = e.currentTarget.dataset.id;
+        let idx = e.currentTarget.dataset.idx;
+        let json = await wxRequest({query:{id}},api.collectTeacher);
+        console.log('收藏老师',json)
+        Tips.success(json.data.message);
+        let childtearchData = this.childtearchData;
+        childtearchData[idx].teacher_collected = 1;
+        that.childtearchData = childtearchData;
+        that.$parent.childtearchData = childtearchData;
+        that.$apply();
+    },
+    async romeCollectTeacher(e){
+        let that = this;
+        let id = e.currentTarget.dataset.id;
+        let idx = e.currentTarget.dataset.idx;
+        let json = await wxRequest({query:{id}},api.disCollectTeacher);
+        console.log('取消收藏老师',json)
+        Tips.success(json.data.message);
+        let childtearchData = this.childtearchData;
+        childtearchData[idx].teacher_collected = 0;
+        that.childtearchData = childtearchData;
+        that.$parent.childtearchData = childtearchData;
+        that.$apply();
+    }
+  };
+
+  watch = {
+    childtearchData(newValue, oldValue) {
+      console.log(`childtearchData value: ${oldValue} -> ${newValue}`);
+    },
+    page(newValue, oldValue) {
+      console.log(`page value: ${oldValue} -> ${newValue}`);
+    }
+  };
+
+  async onLoad() {
+    let json = await wxRequest({query: {page: 0}},api.teacherList);
+    let office = await wxRequest({query: {page: 0}},api.official);
+    console.log("官方频道", office.data);
+    console.log("老师频道", json.data);
+    this.childtearchData = json.data;
+    this.officialData = office.data;
+    this.$parent.childtearchData = json.data;
+    this.$parent.officialData = office.data;
+    this.$apply();
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.teacher-container {
+  background: #fff;
+  min-height: 1218rpx;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 26rpx 32rpx;
+  margin: 18rpx 0;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  .nav-item {
+    width: 326rpx;
+    height: 108rpx;
+    color: #fff;
+    line-height: 108rpx;
+    text-indent: 42rpx;
+    background: url("https://qncdn.playonwechat.com/banyeyinyue/teacher-image-navbg.png");
+    background-size: 100% 100%;
+  }
+  .nav-item.active {
+    border: 1px solid red;
+  }
+}
+.nav-title {
+  display: flex;
+  align-items: flex-end;
+  padding: 30rpx;
+  .title-tip {
+    font-size: 20rpx;
+    color: #bbb;
+    margin-left: 14rpx;
+  }
+}
+
+.teach-music-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  box-shadow: 0 0 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.item-left{
+    flex:1;
+    display: flex;
+    .right{
+        flex:1;
+    }
+}
+
+.teach-item {
+  width: 100%;
+  display: flex;
+  padding: 20rpx 30rpx;
+  position: relative;
+  .collect-teach{
+      width:80rpx;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      image{
+         width:50rpx;
+         height: 50rpx;
+      }
+  }
+}
+
+.teach-item:before {
+  content: " ";
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #dedfe0;
+  transform: scaleY(0.5);
+  overflow: hidden;
+  transform-origin: 0 0;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.teach-avatar {
+  width: 94rpx;
+  height: 94rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+  image {
+    width: 94rpx;
+    border-radius: 50%;
+    display: block;
+  }
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6rpx 0;
+  .teacher-name {
+    font-size: 24rpx;
+    color: #808080;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .music-name {
+    color: #333;
+  }
+  .teacher-name:before {
+    content: " ";
+    display: block;
+    width: 20rpx;
+    height: 20rpx;
+    background: url("https://qncdn.playonwechat.com/banyeyinyue/icon-teacher-audio.png");
+    background-size: 100% 100%;
+    margin-right: 14rpx;
+  }
+}
+</style>

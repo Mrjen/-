@@ -14,32 +14,49 @@ currentData = {
 function playMusic(currentData){
     let oldList = currentData.oldList;
     let newList = currentData.newList?currentData.newList:oldList;
+    console.log('newList',newList)
     let i = currentData.idx || 0;
     let changeList = currentData.changeList;
     let cycle = currentData.cycle;
     if(changeList){
-        console.log("切换列表")
+        console.log("切换列表",i);
+        console.log('newList[0]',newList[0])
         wx.playBackgroundAudio({
             dataUrl: newList[i].audio,
-            title: newList[i].name,
+            title: newList[i].music_name,
             success(res){
+                wx.setStorageSync('currentMusic',newList[i]);
                 wx.onBackgroundAudioStop(function(){
                     let midx = wx.getStorageSync('midx');
-                    midx = (midx+1===newList.length)?0:(midx+1);
+                    midx = (midx+1==newList.length)?0:(midx+1);
+                    wx.setStorageSync('midx',midx);
                     let currentMusic = newList[midx];
                     wx.setStorageSync('currentMusic',currentMusic)
                     wx.playBackgroundAudio({
-                        dataUrl:newList,
-                        title:""
+                        dataUrl:newList[midx].audio,
+                        title:newList[midx].music_name,
                     })
                 })
             }
         });
     }else{
-        console.log("不切换列表");
-        wx.playBackgroundAudio({
-            dataUrl: newList[i].audio,
-            title: newList[i].name
+        console.log("不切换列表",i);
+        wx.setStorageSync('midx',i);
+          console.log('oldlist23',oldList[i].audio);
+          wx.playBackgroundAudio({
+            dataUrl:oldList[i].audio,
+            title: oldList[i].music_name,
+            success(res){
+                console.log(oldList[i].music_name)
+                let midx = wx.getStorageSync('midx');
+                wx.onBackgroundAudioStop(function(){
+                    
+                })
+                wx.setStorageSync('currentMusic',oldList[i])
+            },
+            fail(res){
+                console.log('fail',res)
+            }
         });
     }
 }

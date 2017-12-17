@@ -8,7 +8,9 @@
               src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-up.png"></image>
            <image 
            @tap="tabbarDown" 
-           class="up" wx:else src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-down.png"></image>
+           class="up" 
+           wx:else 
+           src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-down.png"></image>
        </view>
 
        <view class="tabbar-box" @tap="childTap">
@@ -31,8 +33,7 @@ export default class tabbar extends wepy.component {
   data = {
     showTabBar: true,
     animationData: {},
-    tabbar: [
-      {
+    tabbar: [{
         icon:
           "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-teacher.png",
         activeicon:
@@ -40,8 +41,7 @@ export default class tabbar extends wepy.component {
         text: "老师",
         url: "",
         active: false
-      },
-      {
+      },{
         icon:
           "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-music.png",
         activeicon:
@@ -49,32 +49,28 @@ export default class tabbar extends wepy.component {
         text: "音乐",
         url: "",
         active: false
-      },
-      {
+      },{
         icon: "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-home.png",
         activeicon:
           "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-home-active.png",
         text: "主页",
         url: "",
         active: true
-      },
-      {
+      },{
         icon: "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-list.png",
         activeicon:
           "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-list-active.png",
         text: "排行榜",
         url: "",
         active: false
-      },
-      {
+      },{
         icon: "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-mine.png",
         activeicon:
           "https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-mine-active.png",
         text: "我的",
         url: "",
         active: false
-      }
-    ]
+      }]
   };
   props = {
     animationData: {}
@@ -109,6 +105,7 @@ export default class tabbar extends wepy.component {
           console.log(that.showTabBar)
     },
     tap(e) {
+      console.log('tabber被点击了')
       let idx = e.currentTarget.dataset.idx;
       let that = this;
       let tabbar = that.tabbar;
@@ -131,10 +128,13 @@ export default class tabbar extends wepy.component {
   onLoad() {
     console.log("show");
   }
+
+
+
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .container {
   .tabbar {
     width: 750rpx;
@@ -143,7 +143,6 @@ export default class tabbar extends wepy.component {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-bottom: 50rpx;
     .tabbar-top {
       display: flex;
       justify-content: center;
@@ -186,4 +185,8 @@ export default class tabbar extends wepy.component {
     }
   }
 }
+
+
+// test
+
 </style>

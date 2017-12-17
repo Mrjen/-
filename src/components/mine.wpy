@@ -2,22 +2,26 @@
 <view class="container">
    <view class="user-info">
        <view class="avatar">
-           <image src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKv37ZdJX4iclhFFpHBVq2zTA3aS5vlsopgCVYgyxSFvxZIzXj8nBcicT1sbHXbmFNtWEvJ5kwjLr7g/0"></image>
+           <image src="{{MineUserInfo.avatarUrl}}"></image>
        </view>
-       <view class="nickname">小恶魔</view>
+       <view class="nickname">{{MineUserInfo.nickName}}</view>
        <view class="option-bar">
             <view class="item-btn">
                 <text>收藏</text>
                 <view class="icon">
-                    <image wx:if="{{activeCollect}}" src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png"></image>
-                    <image wx:else src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect.png"></image>
+                    <image wx:if="{{activeCollect}}" 
+                           src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png"></image>
+                    <image wx:else 
+                           src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect.png"></image>
                 </view>
             </view>
             <view class="item-btn">
                 <text>消息</text>
                 <view class="icon">
-                     <image wx:if="{{activeMsg}}" src="https://qncdn.playonwechat.com/banyeyinyue/mine-icon-notice-active.png"></image>
-                     <image wx:else src="https://qncdn.playonwechat.com/banyeyinyue/mine-icon-notice.png"></image>
+                     <image wx:if="{{activeMsg}}" 
+                            src="https://qncdn.playonwechat.com/banyeyinyue/mine-icon-notice-active.png"></image>
+                     <image wx:else 
+                            src="https://qncdn.playonwechat.com/banyeyinyue/mine-icon-notice.png"></image>
                 </view>
             </view>
             <button class="item-btn btn-icon" open-type="share">
@@ -27,34 +31,57 @@
                 </view>
             </button>
        </view>
-       <image class="info-bg" src="https://wx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTKv37ZdJX4iclhFFpHBVq2zTA3aS5vlsopgCVYgyxSFvxZIzXj8nBcicT1sbHXbmFNtWEvJ5kwjLr7g/0"></image>
+       <image class="info-bg" src="{{MineUserInfo.avatarUrl}}"></image>
    </view>
 
    <view class="collect-content">
         <view class="collect-nav">
-           <view class="nav-item {{item.active?'active':''}}" 
-                 wx:for="{{collectNav}}"
+           <view wx:for="{{collectNav}}"
+                 class="nav-item {{item.active?'active':''}}" 
                  wx:key="{{index}}"
                  data-idx="{{index}}" 
                  @tap="changeCollectNav">{{item.text}}</view>
         </view>
-        <view class="collect-list">
+        <view class="collect-list" wx:if="{{mineNav=='1'}}">
             <view class="music-collect">
                 <view class="music-item" 
-                      wx:for="{{list}}"
+                      wx:for="{{MyCollectlist}}"
                       wx:key="{{index}}">
                       <view class="item-left"
-                            @tap="playMusic">
+                            data-audio="{{item.audio}}"
+                            data-idx="{{index}}"
+                            @tap="playCollectMusic">
                           <view class="item-index">{{index+1}}</view>
                           <view class="music-info">
-                            <view class="music-name">{{item.music}}</view>
-                            <view class="music-author">{{item.teachername}}</view>
+                            <view class="music-name">{{item.music_name}}</view>
+                            <view class="music-author">{{item.teacher_name}}</view>
                           </view>
                       </view>
                       <view class="item-right">
                           <view @tap="optionMisuc" 
                                 class="more-icon"
                                 data-id="{{item.id}}"></view>
+                      </view>
+                </view>
+            </view>
+        </view>
+        <view class="collect-list" wx:if="{{mineNav=='2'}}">
+            <view class="music-collect">
+                <view class="music-item" 
+                      wx:for="{{MyCollectTeacher}}"
+                      wx:key="{{index}}">
+                      <view class="item-left"
+                            data-id="{{item.id}}"
+                            @tap="toTeacherDetail">
+                          <view class="item-index">{{index+1}}</view>
+                          <view class="music-info teach-info">               
+                             <view class="teach-avatar">
+                               <image mode="widthFix" src="{{item.avatar}}"></image>
+                            </view>
+                            <!-- <view class="teach-name"></view> -->
+                           <!-- <view class="music-name">{{item.music_name}}</view> -->
+                            <view class="music-author">{{item.teacher_name}}</view>
+                          </view>
                       </view>
                 </view>
             </view>
@@ -74,11 +101,11 @@ import Popup from '../components/popup';
 import api from "../utils/api.js";
 import Tips from "../utils/tip.js";
 import { wxRequest } from "../utils/wxRequest.js";
-export default class Mine extends wepy.page {
+import {playMusic} from '../utils/playMusic.js'
+export default class Mine extends wepy.component {
   config = {
     navigationBarTitleText: "我的"
   };
-
   components = {
       Popup:Popup
   }
@@ -86,6 +113,8 @@ export default class Mine extends wepy.page {
   data = {
     activeCollect: true,  //当前显示的tabbar
     activeMsg: false,   
+    mineNav:1,
+    MineUserInfo:{},
     PopupisShow:'',    //popup是否显示了
     collectNav: [
       {
@@ -99,140 +128,56 @@ export default class Mine extends wepy.page {
         active: false
       }
     ],
-    list: [
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      }
-    ]
+    MyCollectlist: []
   };
 
+  props = {
+    mineNav:{
+      twoWay:true
+    },
+    MyCollectTeacher:{
+      twoWay:true
+    },
+    MyCollectlist:{
+      twoWay:true
+    },
+    MineUserInfo:{
+      twoWay:true
+    }
+  }
+
   methods = {
-    changeCollectNav(e) {
+    async changeCollectNav(e) {
       let that = this;
       let idx = e.currentTarget.dataset.idx;
       let collectNav = this.collectNav;
+      let teach = await wxRequest({query:{page:0}},api.myCollectTeacher);
+
       collectNav.map((item, index) => {
         item.active = false;
       });
       collectNav[idx].active = true;
       that.collectNav = collectNav;
+      that.mineNav = collectNav[idx].id;
+      that.$parent.mineNav = collectNav[idx].id;
       that.$apply();
+    },
+
+    //去老师歌曲页面
+    toTeacherDetail(e){
+        wx.navigateTo({
+          url: '../pages/teacherMusicList?id=' + e.currentTarget.dataset.id
+        })
+    },
+    // 播放收藏的歌曲
+    playCollectMusic(e){
+       console.log("播放收藏的歌曲")
+       let that = this;
+       let oldList = wx.getStorageSync('oldList');
+       let newList = this.MyCollectlist;
+       let idx = e.currentTarget.dataset.idx;
+       wx.setStorageSync('midx',idx);
+       playMusic({oldList,newList,changeList:true,idx,cycle:true,that,Next:0})
     },
 
     optionMisuc(e){
@@ -251,10 +196,23 @@ export default class Mine extends wepy.page {
         this.PopupisShow = false;
         this.$apply();
     }
-  };
+  }
+
+  async onLoad(){
+     let that = this;
+     let json = await wxRequest({query:{page:0}},api.myCollect);
+     let teach = await wxRequest({query:{page:0}},api.myCollectTeacher);
+     this.MyCollectlist = json.data;
+     this.MyCollectTeacher = teach.data;
+     this.$parent.MyCollectlist = json.data;
+     this.$parent.MyCollectTeacher = teach.data;
+     this.$apply();
+     console.log('我的收藏歌曲',json);
+     console.log('我收藏的老师',teach)
+  }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .user-info {
   width: 750rpx;
   height: 616rpx;
@@ -392,6 +350,28 @@ export default class Mine extends wepy.page {
            padding:14rpx 0;
            flex-direction: column;
            justify-content:space-between;
+           .teach-avatar{
+             width: 88rpx;
+             height: 88rpx;
+             overflow: hidden;
+             border-radius: 50%;
+             margin-right: 20rpx;
+             image{
+               display: block;
+               width: 88rpx;
+               border-radius: 88rpx;
+             }
+           }
+       }
+       .teach-info{
+         display: flex;
+         flex-direction: row;
+         align-items: center;
+         justify-content: flex-start;
+         .music-author{
+           font-size: 30rpx;
+           color: #333;
+         }
        }
        .item-right{
            width:100rpx;

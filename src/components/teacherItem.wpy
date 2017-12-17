@@ -17,7 +17,7 @@ export default class teacherItem extends wepy.component{
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import '../style/base.less';
 .item{
     width: 100%;

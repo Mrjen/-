@@ -1,529 +1,186 @@
 <style lang="less">
-@import "../style/base.less";
-.container {
-  background-size: 100% 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  border: 1px solid transparent;
-}
 
-.body-bg {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  filter: blur(30px);
-  z-index: -1;
-}
-
-.bottom-tabbar {
-  position: fixed;
-  bottom: -186rpx;
-  left: 0;
-}
-
-.tabbar-icon-show {
-  width: 152rpx;
-  height: 52rpx;
-  background-image: url("https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-up.png");
-  background-size: 100% 100%;
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-}
-
-.tabbar-icon-hide {
-  width: 152rpx;
-  height: 52rpx;
-  background-image: url("https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-down.png");
-  background-size: 100% 100%;
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 0;
-}
-
-.music-disc {
-  width: 498rpx;
-  height: 498rpx;
-  border-radius: 50%;
-  background: #151618;
-  margin: 0 auto;
-  margin-top: 78rpx;
-  .progress-bg {
-    width: 438rpx;
-    height: 438rpx;
-    border: 4rpx solid #3f3e44;
-    border-radius: 50%;
-  }
-  .progress {
-    width: 438rpx;
-    height: 438rpx;
-    border: 4rpx solid #ff9500;
-    border-radius: 50%;
-  }
-  .avatarUrl {
-    width: 100%;
-    border-radius: 50%;
-    display: block;
-    flex-shrink: 0;
-  }
-  .cover {
-    width: 370rpx;
-    height: 370rpx;
-    border-radius: 50%;
-    overflow: hidden;
-  }
-}
-
-.music-view {
-  .music-name {
-    text-align: center;
-    color: #fff;
-    padding-top: 60rpx;
-    margin-bottom: 20rpx;
-  }
-  .lyrics {
-    width: 100%;
-    height: 200rpx;
-    overflow: hidden;
-  }
-  .lyrics-item {
-    text-align: center;
-    font-size: 24rpx;
-    line-height: 50rpx;
-    color: #fff;
-  }
-}
-
-.option {
-  width: 526rpx;
-  height: 50rpx;
-  margin: 0 auto;
-  padding: 0 50rpx;
-  display: flex;
-  margin-top: 40rpx;
-  justify-content: space-between;
-  .option-btn {
-    width: 50rpx;
-    height: 50rpx;
-    padding: 0;
-    margin: 0;
-    background-color: transparent;
-    image {
-      display: block;
-      width: 50rpx;
-      height: 50rpx;
-    }
-  }
-  .option-btn:after {
-    display: none;
-  }
-}
-
-.kefu-btn {
-  width: 50rpx;
-  height: 50rpx;
-  padding: 0;
-  margin: 0;
-  background: url("https://qncdn.playonwechat.com/banyeyinyue/icon-home-kefu.png");
-  background-size: 100% 100%;
-  position: fixed;
-  right: 50rpx;
-  top: 50rpx;
-}
-
-.kefu-btn:after {
-  display: none;
-}
-
-.kefu-qipao {
-  width: 62rpx;
-  height: 50rpx;
-  background: url("https://qncdn.playonwechat.com/banyeyinyue/concant-us.png");
-  background-size: 100% 100%;
-  position: fixed;
-  top: 30rpx;
-  right: 90rpx;
-}
-
-.music-progress {
-  width: 648rpx;
-  height: 50rpx;
-  margin: 20rpx auto;
-  color: #fff;
-  .bar-bg {
-    width: 510rpx;
-    height: 2px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 5px;
-    .bar {
-      height: 2px;
-      background: #ff9500;
-      position: relative;
-      border-radius: 5rpx;
-    }
-    .bar:before {
-      content: "";
-      display: block;
-      width: 28rpx;
-      height: 28rpx;
-      background: rgba(255, 255, 255, 0.6);
-      right: 0;
-      top: 0;
-      border-radius: 50%;
-      position: absolute;
-      margin-right: -12rpx;
-      transform: translate(-50%, -50%);
-    }
-    .bar:after {
-      content: "";
-      display: block;
-      width: 16rpx;
-      height: 16rpx;
-      background: #ff9500;
-      border-radius: 50%;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transform: translate(-50%, -50%);
-    }
-  }
-  .time {
-    font-size: 22rpx;
-    width: 70rpx;
-    text-align: center;
-  }
-}
-
-.music-option {
-  width: 260rpx;
-  height: 50rpx;
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  .option-btn {
-    width: 50rpx;
-    height: 50rpx;
-    image {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-  }
-}
 </style>
 <template>
   <view class="container">
-      <tabbar class="bottom-tabbar" :animationData="animationData"></tabbar>
-
-      <view class="music-disc column-center">
-            <view class="progress-bg">
-                <view class="progress column-center">
-                    <view class="cover column-center">
-                       <image class="avatarUrl" mode="widthFix" src="{{currentMusic.cover}}"></image>
-                    </view>
-                </view>
-            </view>
+      <view class="tab_item tab_message" hidden="{{currentTab != 0}}">
+          <Teacher :childtearchData.sync="tearchData" 
+                   :teachNav="teachNav" 
+                   :officialData.sync="officialData"></Teacher>
       </view>
-
-      <view class="music-view">
-          <view class="music-name">{{currentMusic.name}}</view>
-          <view class="lyrics">
-            {{LyHeight}}
-             <view class="lyrics-box" style="transform:translateY({{-LyHeight+'px'}})">
-                 <view wx:for="{{currentMusic.word}}" 
-                    wx:key="id"
-                    class="lyrics-item">{{item}}</view>
-             </view>
-          </view>
-          <view class="options-bar">
-             
-          </view>
+      <view class="tab_item tab_contact" hidden="{{currentTab != 1}}">
+          <musicList :musicListData.sync="musicListData"></musicList>
       </view>
-
-      <image class="body-bg" src="{{currentMusic.cover}}"></image>
-      <button class="kefu-btn" open-type="concant"></button>
-      <view class="kefu-qipao"></view>
-
-      <view class="option">
-           <view class="option-btn">
-              <image  @tap="removeCollect" 
-                      wx:if="{{currentMusic.collected}}"
-                      data-id="{{currentMusic.id}}"
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect-active.png"></image>
-
-               <image @tap="addCollect"
-                      wx:else  
-                      data-id="{{currentMusic.id}}"
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect.png"></image>
-               
-           </view>
-           <!-- <view class="option-btn">
-               <image wx:if="{{true}}" 
-                      @tap="downloadMusic"
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-download.png"></image>
-               <image wx:else 
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-download-active.png"></image>
-           </view> -->
-           <view class="option-btn">
-               <image 
-               @tap="Addflower"
-               data-id="{{currentMusic.id}}"
-               src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect-flower.png"></image>
-           </view>
-           <button class="option-btn"  open-type="share">
-               <image wx:if="{{true}}"
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-share.png"></image>
-               <image wx:else 
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-share-active.png"></image>
-           </button>
-           
-       </view>
-
-       <view class="music-progress row-between">
-           <view class="time">{{currentMusic.fromCurrentTime}}</view>
-           <view class="bar-bg" @tap="getBarPosition">
-              <view class="bar" style="width:{{musicBarWidth+'rpx'}}"></view>
-          </view>
-          <view class="time">{{currentMusic.from_duration}}</view>
-       </view>
-
-       <view class="music-option">
-           <view class="option-btn">
-               <image 
-               @tap="PrevMusic"
-               src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-prev.png"></image>
-           </view>
-           <view class="option-btn">
-               <image wx:if="{{musicSatatus}}" 
-                      @tap="PauseMusic"
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-pause.png"></image>
-               <image wx:else
-                      @tap="PlayMusic"
-                      src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-play.png"></image>
-           </view>
-           <view class="option-btn">
-               <image 
-               @tap="NextMusic"
-               src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-next.png"></image>
-           </view>
-       </view>
-  </view>
+      <view class="tab_item tab_discovery" hidden="{{currentTab != 2}}">
+          <Home></Home>
+      </view>
+      <view class="tab_item tab_me" hidden="{{currentTab != 3}}">
+          <listBords></listBords>
+      </view>
+      <view class="tab_item tab_mine" wx:if="{{currentTab == 4}}">
+          <Mine :mineNav.sync="mineNav" 
+                :MyCollectTeacher.sync="MyCollectTeacher" 
+                :MineUserInfo.sync="MineUserInfo"></Mine>
+      </view>
+        <tab :active="currentTab" 
+             :animationData="animationData" 
+             :MineUserInfo.sync="MineUserInfo" ></tab>
+      </view>
 </template>
 
 <script>
 import wepy from "wepy";
 import tabBar from "../components/tabbar";
+
+import Teacher from '../components/teacher';
+import musicList from '../components/musicList';
+import Home from '../components/home';
+import listBords from '../components/listbords';
+import Mine from '../components/mine';
+
 import api from "../utils/api.js";
 import Tips from "../utils/tip.js";
+import {getMoreData} from '../utils/getMoreData.js';
 import { wxRequest } from "../utils/wxRequest.js";
 import { playMusic } from "../utils/playMusic.js";
 import { getLyHeight } from "../utils/getLyHeight.js";
 import { formtime } from "../utils/utils.js";
+import Tab from '../components/tab'
 export default class Index extends wepy.page {
   config = {
-    disableScroll: true
+   
   };
 
   data = {
-    animationData: {},
-    showTabBar: true,
-    music: [],
-    currentMusic: [],
-    LyHeight: 0,
-    musicBarWidth: 0, //音乐进度条
-    musicSatatus: 1 //后台音乐播放状态 1播放 0 暂停
+    animationData: {},    //导航动画数据
+    showTabBar: true,     //是否显示导航
+    MineUserInfo:{},      //个人信息
+    page:1,               //页面数据页
+    teachNav:1,           //老师页面导航位置
+    mineNav:1,            //我的页面导航位置
+    tearchData:[],        //老师数据
+    officialData:[],      //官方频道
+    MyCollectTeacher:[],  //我收藏的老师
+    music: [],  
+    currentMusic: [],    // 当前播放音乐
+    LyHeight: 0,         // 歌词高度
+    musicBarWidth: 0,    //音乐进度条
+    currentTab:1,        //默认显示主页
+    musicSatatus: 1,     //后台音乐播放状态 1播放 0 暂停
+    musicListData:[]     //音乐页面数据
   };
 
+  watch = {
+    teachNav(newValue, oldValue){
+       console.log(`teachNav value: ${oldValue} -> ${newValue}`)
+    },
+    MineUserInfo(newValue, oldValue){
+       console.log(`MineUserInfo value: ${oldValue} -> ${newValue}`)
+    }
+  }
+
   props = {
-    animationData: {}
+    animationData: {},
+    page:{
+      twoWay: true
+    },
+    teachNav:{
+      twoWay: true
+    }
   };
 
   components = {
-    tabbar: tabBar
+    tab: Tab,
+    Teacher:Teacher,
+    musicList:musicList,
+    Home:Home,
+    listBords:listBords,
+    Mine:Mine
   };
 
   events = {};
 
   onReady() {}
 
+  onShow(){
+      let currentTab = wx.getStorageSync('currentTab');
+      this.currentTab = currentTab?currentTab:0;
+      this.$apply();
+  }
+
   methods = {
-    // 暂停音乐
-    PauseMusic() {
-      wx.pauseBackgroundAudio();
-      this.musicSatatus = 0;
-      this.$apply();
-    },
-
-    // 播放音乐
-    PlayMusic() {
-      let that = this;
-      let currentMusic = that.currentMusic;
-      let midx = wx.getStorageSync("midx");
-      let oldList = wx.getStorageSync("oldList");
-      playMusic({
-        oldList: oldList,
-        newList: "",
-        changeList: false,
-        idx: midx,
-        cycle: true,
-        Dom: that,
-        Next: 0
-      });
-      this.musicSatatus = 1;
-      this.$apply();
-    },
-
-    // 上一首歌曲
-    PrevMusic() {
-      let that = this;
-      let midx = wx.getStorageSync("midx");
-      let music = this.music;
-      if (midx - 1 < 0) {
-        midx = music.length - 1;
-      } else {
-        midx = midx - 1;
-      }
-      wx.setStorageSync("midx", midx);
-      that.currentMusic = music[midx];
-      that.$apply();
-      let oldList = wx.getStorageSync("oldList");
-      playMusic({
-        oldList: oldList,
-        newList: "",
-        changeList: false,
-        idx: midx,
-        cycle: true,
-        Dom: that,
-        Next: 0
-      });
-    },
-    // 下一首歌
-    NextMusic() {
-      let that = this;
-      let midx = wx.getStorageSync("midx");
-      let music = this.music;
-      if (midx + 1 === music.length) {
-        midx = 0;
-      } else {
-        midx = midx + 1;
-      }
-      wx.setStorageSync("midx", midx);
-      that.currentMusic = music[midx];
-      that.$apply();
-      let oldList = wx.getStorageSync("oldList");
-      playMusic({
-        oldList: oldList,
-        newList: "",
-        changeList: false,
-        idx: midx,
-        cycle: true,
-        Dom: that,
-        Next: 0
-      });
-    },
-    // 点击改变进度条位置
-    getBarPosition(e) {
-      console.log(e);
-    },
-    // 收藏
-    async addCollect(e) {
-      await wxRequest(
-        {
-          query: {
-            id: e.currentTarget.dataset.id
-          }
-        },
-        api.Collect
-      );
-      Tips.success("收藏成功");
-      this.currentMusic.collected = 1;
-      this.$apply();
-    },
-    // 取消收藏
-    async removeCollect(e) {
-      console.log("取消收藏");
-      await wxRequest(
-        {
-          query: {
-            id: e.currentTarget.dataset.id
-          }
-        },
-        api.disCollect
-      );
-      Tips.success("取消收藏");
-      this.currentMusic.collected = 0;
-      this.$apply();
-    },
-    // 加人气
-    async Addflower(e){
-       console.log("加人气");
-       let json = await wxRequest({
-          query:{
-             id: e.currentTarget.dataset.id
-          }
-       },api.Addflower);
-       console.log(json.data)
-       if(json.data.status===0){
-          wx.showToast({
-            title: json.data.message,
-            image: '../image/alertf-lower.png',
-            mask: true,
-            duration: 1500
-          })
-       }else if(json.data.status===1){
-           wx.showToast({
-            title: json.data.message,
-            image: '../image/nozan.png',
-            mask: true,
-            duration: 1500
-          })
-       }
-    }
-
+ 
   };
 
-  async onShow() {
-    let that = this;
-  }
-
   async onLoad() {
-    let that = this;
-    let json = await wxRequest({}, api.Home);
-
-    console.log(json.data);
-    let music = json.data;
-    // music.map((el,index)=>{
-    //    el.duration = formtime(el.duration,1)
-    // })
-    let currentMusic = music[0];
-    currentMusic.from_duration = formtime(currentMusic.duration, 1);
-    that.music = music;
-    that.$apply();
-    playMusic({
-      oldList: "",
-      newList: music,
-      changeList: true,
-      idx: 0,
-      cycle: true,
-      Dom: that,
-      Next: 0
-    });
-    wx.onBackgroundAudioPlay(function() {
-      getLyHeight(currentMusic, that, 0);
-    });
-    console.log("music[0]", music[0]);
-    that.currentMusic = currentMusic;
-    wx.setStorageSync("midx", 0);
-    wx.setStorageSync("oldList", music);
-    that.$apply();
+     wx.setStorageSync('currentTab',0)
   }
+
+  onReachBottom(){
+     console.log('页面到底了 active',this.currentTab)
+     let _tab = this.currentTab;
+     let that = this;
+     let page = that.page;
+     if(_tab=='0'){
+        console.log('加载老师页面数据')
+        console.log('page',page)
+        if(this.teachNav=='1'){
+            getMoreData({query:{page}},api.teacherList,that,function(res){
+                    let json = res.data;
+                    console.log('老师频道',json)
+                    let oldData = that.tearchData;
+                    console.log(oldData)
+                    if(json.length>0){
+                          that.tearchData = [...oldData,...json];
+                          that.page++; 
+                    }else{
+                       that.tearchData = oldData;
+                    }
+                    that.$apply();
+              })
+        }else if(this.teachNav=='2'){
+            getMoreData({query:{page}},api.official,that,function(res){
+                    let json = res.data;
+                    console.log('官方频道',json)
+                    let oldData = that.officialData;
+                    console.log(oldData)
+                    if(json.length>0){
+                          that.officialData = [...oldData,...json];
+                          console.log('111111111111',that.officialData)
+                          that.page++; 
+                    }else{
+                       that.officialData = oldData;
+                    }
+                    
+                    that.$apply();
+              })
+        }
+        
+     }else if(_tab=='1'){
+        console.log('加载音乐页面数据');
+        console.log(page)
+        getMoreData({query:{page}},api.delicateAndMusics,that,function(res){
+          console.log('音乐页面的数据',res.data)
+          let oldMusicList = that.musicListData;
+          if(res.data.musices.length>0){
+              that.musicListData = [...oldMusicList,...res.data.musices];
+              that.page++;
+              console.log(that.musicListData)
+          }else{
+             that.musicListData = oldMusicList;
+          }
+          that.$apply();
+        })
+     }else if(_tab=='2'){
+       console.log('加载主页榜页面数据')
+     }else if(_tab=='3'){
+       console.log('加载排行榜页面数据')
+     }else if(_tab=='4'){
+       console.log('加载我的页面数据');
+
+     }
+  }
+
   onShareAppMessage() {
     return {};
   }

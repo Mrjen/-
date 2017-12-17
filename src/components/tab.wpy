@@ -1,0 +1,178 @@
+<template>
+  <view class="tab-com" animation="{{animationData}}">
+      <view class="show-tabbar">
+          <image  
+              @tap="tabbarUp" 
+              class="up icon-up" 
+              wx:if="{{showTabBar}}"
+              src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-up.png"></image>
+           <image 
+           @tap="tabbarDown" 
+           class="up" 
+           wx:else 
+           src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-down.png"></image>
+      </view>
+      <view class="tab">
+        <view class="tab_item tab_message{{active==0? 'active':''}}" 
+             data-idx="0"
+             @tap="change">
+            <image class="icon" src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-teacher{{active== 0?'-active':''}}.png"></image>
+            <text class="title">老师</text>
+        </view>
+        <view class="tab_item tab_contact{{active == 1?'active':''}}" 
+              data-idx="1"
+              @tap="change">
+            <image class="icon" 
+                   src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-music{{active==1?'-active':''}}.png"></image>
+            <text class="title">音乐</text>
+        </view>
+        <view class="tab_item tab_discovery{{active == 2 ? 'active' : ''}}" 
+              data-idx="2"
+              @tap="change">
+            <image class="icon" src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-home{{active== 2 ? '-active' : ''}}.png"></image>
+            <text class="title">主页</text>
+        </view>
+        <view class="tab_item tab_me{{active == 3 ? ' active' : ''}}" 
+              data-idx="3"
+              @tap="change">
+            <image class="icon" src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-list{{active == 3 ? '-active' : ''}}.png"></image>
+            <text class="title">排行榜</text>
+        </view>
+        <view class="tab_item tab_me{{active == 4 ? ' active' : ''}}" 
+              data-idx="4"
+              @tap="change">
+            <image class="icon" src="https://qncdn.playonwechat.com/banyeyinyue/tabbar-icon-mine{{active== 4 ? '-active' : ''}}.png"></image>
+            <text class="title">我的</text>
+        </view>
+    </view>
+    </view>
+</template>
+<script>
+import wepy from "wepy"
+import {wxRequest} from '../utils/wxRequest.js'
+import api from '../utils/api.js'
+export default class Tab extends wepy.component {
+  props = {
+    active: {
+      twoWay: true
+    },
+    animationData: {
+      twoWay: true
+    },
+    MineUserInfo:{
+      twoWay: true
+    }
+  };
+  data = {
+      showTabBar:true,
+      MineUserInfo:{}
+  };
+
+  methods = {
+    async change(e) {
+      console.log('页面的index',e.currentTarget.dataset.idx);
+      let pageIndex = e.currentTarget.dataset.idx;
+      this.$parent.page = 1;
+      this.active = pageIndex;
+      let json = await wxRequest({query:{page:0}},api.myCollect);
+      let teach = await wxRequest({query:{page:0}},api.myCollectTeacher);
+      this.$parent.MyCollectlist = json.data;
+      this.$parent.MyCollectTeacher = teach.data;
+      // 在这加载用户信息
+      if(pageIndex=='4'){
+          let userInfo = wx.getStorageSync('userInfo');
+          if(userInfo){
+            this.MineUserInfo = userInfo;
+            this.$parent.MineUserInfo = userInfo;
+            this.$apply();
+          }
+      }
+      if(pageIndex=='2'){
+         console.log("点击首页")
+      }
+      
+      this.$apply();
+    },
+    tabbarUp() {
+      // console.log("tabbarUp点击了");
+           let that = this;
+           var animation = wx.createAnimation({
+            duration: 1000,
+            timingFunction: "ease"
+          });
+          animation.translateY(-102).step();
+          that.animationData = animation.export();
+          that.showTabBar = false;
+          that.$apply();
+    },
+    tabbarDown(){
+         let that = this;
+           var animation = wx.createAnimation({
+            duration: 1000,
+            timingFunction: "ease"
+          });
+          animation.translateY(0).step();
+          that.animationData = animation.export();
+          that.showTabBar = true;
+          that.$apply();
+          console.log(that.showTabBar)
+    }
+  };
+
+  onLoad() {
+    console.log("Tab组件显示了");
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.tab-com {
+  color: #7b7b7b;
+  position: fixed;
+  bottom: -180rpx;
+  height: 180rpx;
+  width: 750rpx;
+  font-size: 24rpx;
+  white-space: nowrap;
+  box-sizing: border-box;
+  background-color: #000;
+}
+
+.tab {
+  display: flex;
+  width: 750rpx;
+  padding:20rpx 0;
+}
+.tab .tab_item {
+  display: block;
+  flex: 1;
+  text-align: center;
+}
+.tab .tab_item.active {
+  color: #ff9500;
+}
+.tab .icon {
+  width: 60rpx;
+  height: 60rpx;
+  display: block;
+  margin: auto;
+}
+.tab .title {
+  padding-top: 6rpx;
+  display: block;
+  font-size: 22rpx;
+}
+
+.show-tabbar image {
+  width: 152rpx;
+  height: 52rpx;
+  margin: 0 auto;
+  display: block;
+}
+
+.icon-up{
+    transform: translateY(-52rpx);
+}
+</style>
+
+

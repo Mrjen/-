@@ -1,5 +1,5 @@
 <template>
-<view class="container">
+<view class="music-container">
   <view class="recomm">
       <view class="recomm-left">
           <image src="https://qncdn.playonwechat.com/banyeyinyue/musiclist-cover.png"></image>
@@ -29,15 +29,18 @@
   </view>
 
   <view class="music-list-view">
-      <view class="music-item" wx:for="{{list}}" wx:key="{{index}}">
+      <view class="music-item" 
+            wx:for="{{musicListData}}" 
+            data-id="{{item.id}}"
+            wx:key="{{index}}">
           <view class="item-left">
               <view class="item-idx">{{index+1}}</view>
               <view class="item-cover">
-                  <image mode="widthFix" src="{{item.avatar}}"></image>
+                  <image mode="widthFix" src="{{item.cover}}"></image>
               </view>
               <view class="info-view">
-                  <view class="music-name">{{item.music}}</view>
-                  <view class="music-author">{{item.teachername}}</view>
+                  <view class="music-name">{{item.music_name}}</view>
+                  <view class="music-author">{{item.teacher_name}}</view>
               </view>
           </view>
           <view class="item-right">
@@ -57,7 +60,10 @@
 <script>
 import wepy from "wepy";
 import Popup from "../components/popup";
-export default class musicList extends wepy.page {
+import { wxRequest } from "../utils/wxRequest.js";
+import { playMusic } from "../utils/playMusic.js";
+import api from '../utils/api.js'
+export default class musicList extends wepy.component {
   config = {
     navigationBarTitleText: "歌曲",
     backgroundColor: "#000"
@@ -69,127 +75,8 @@ export default class musicList extends wepy.page {
 
   data = {
     PopupisShow: false,
-    list: [
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      },
-      {
-        id: "1",
-        avatar: "http://iph.href.lu/80x80",
-        music: "下辈子我们要不要做夫妻",
-        teachername: "妮子老师",
-        flower: 1600
-      }
-    ]
+    delicate:[],
+    musicListData: []
   };
 
   methods = {
@@ -209,14 +96,28 @@ export default class musicList extends wepy.page {
       this.PopupisShow = false;
       this.$apply();
     }
-  };
+  }
+
+  async onLoad(){
+     let that = this;
+     let json = await wxRequest({query:{page:0}},api.delicateAndMusics);
+     console.log('音乐页面数据',json.data)
+     that.delicate = json.data.delicate;
+     that.musicListData = json.data.musices;
+     that.$parent.musicListData = json.data.musices;
+     that.$apply();
+  }
 }
 </script>
 
-<style lang="less">
-page {
-  background: #000;
-  color: #fff;
+<style lang="less" scoped>
+// page {
+//   background: #000;
+//   color: #fff;
+// }
+
+.music-container{
+   min-height: 1218rpx;
 }
 
 .recomm {

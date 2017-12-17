@@ -7,9 +7,8 @@ const wxRequest = (params={},url) => {
             icon:'loading'
         });
         let data = params.query || {};
-
         let extConfig = wx.getExtConfigSync ? wx.getExtConfigSync() : {}
-        console.log("kid",extConfig.kid)
+        // console.log("kid",extConfig.kid)
         data.kid = extConfig.kid?extConfig.kid:'497';
 
         let Cookie = wx.getStorageSync('Cookie');

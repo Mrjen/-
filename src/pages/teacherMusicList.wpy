@@ -1,0 +1,89 @@
+<template>
+  <view class="container">
+      <view class="music-item" 
+            wx:for="{{music}}"
+            wx:key="{{index}}">
+         <view class="item-left">
+             <view class="music-cover">
+                 <image mode="widthFix" src="{{item.cover}}"></image>
+             </view>
+             <view class="music-info">
+                 <view class="music-name">{{item.music_name}}</view>
+                 <view class="teach-name">{{item.teacher_name}}</view>
+             </view>
+         </view>
+         <view class="item-right"></view>
+      </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+import api from '../utils/api.js'
+import {wxRequest} from '../utils/wxRequest.js'
+export default class teacherMusicList extends wepy.page{
+     data = {
+        music:[]
+     }
+     
+     methods = {
+         
+     }
+
+     async onLoad(options){
+        console.log(options.id)
+        let json = await wxRequest({
+            query:{
+               id: options.id,
+               page:0
+            }
+        },api.teacherMusic)
+        this.music = json.data;
+        this.$apply();
+     }
+ }
+</script>
+
+<style lang="less" scoped>
+.container{
+    width:750rpx;
+}
+
+.music-item{
+    width:100%;
+    display: flex;
+    padding:20rpx;
+    .item-left{
+        display: flex;
+        flex:1;
+    }
+    .music-cover{
+        width: 88rpx;
+        height: 88rpx;
+        overflow: hidden;
+        border-radius: 50%;
+        margin-right:20rpx;
+        border:1px solid red;
+        image{
+          width:88rpx;
+          border-radius: 50%;
+        }
+    }
+    .music-info{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .music-name{
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 550rpx;
+    }
+    .teach-name{
+        color: #908f94;
+        font-size: 26rpx;
+    }
+}
+</style>

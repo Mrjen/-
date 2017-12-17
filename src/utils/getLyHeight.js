@@ -11,16 +11,16 @@ function getLyHeight(params,view,scale){
         let _duration = view.currentMusic.duration;
         let musicBarWidth = null;
         setInterval(function(){
-            //  console.log('state.currentTime',state.currentTime);
              _currentTime = view.currentMusic.currentTime?view.currentMusic.currentTime:0;
              musicBarWidth = (510/_duration)*state.currentTime;
-            //  console.log('_currentTime',_currentTime)
             if(_currentTime<state.currentTime){
                 view.currentMusic.currentTime = state.currentTime;
                 view.currentMusic.fromCurrentTime = formtime(state.currentTime,1);
                 view.musicBarWidth = musicBarWidth;
                 view.$apply();
-                // console.log('2222222222',view.currentMusic)
+            }else{
+                view.musicBarWidth = 0;
+                view.$apply();
             }
         },1000)
         console.log(state.duration);

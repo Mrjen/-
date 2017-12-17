@@ -73,11 +73,14 @@ export default class MusicBar extends wepy.component{
 }  
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 .music-bar{
     width: 750rpx;
     height: 130rpx;
     box-sizing: border-box;
+    position: fixed;
+    left: 0;
+    bottom:500rpx;
 }
 .bar-inner{
     width: 750rpx;
