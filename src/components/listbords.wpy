@@ -9,32 +9,80 @@
                   @tap="changeNav">{{item.text}}</view>
         </view>
 
-        <view class="list-top">
+        <view class="list-top" wx:if="{{listBordsIndex=='1'}}">
             <view class="second">
-               <view class="avatar"><image mode="widthFix" src="{{listBordsData[0].avatar}}"></image></view> 
-               <view class="flower">{{listBordsData[0].flower}}</view>
-               <view class="song-name">{{listBordsData[0].music_name}}</view>
+               <view class="avatar">
+                    <image mode="widthFix" src="{{listBordsData[1].avatar}}"></image>
+               </view> 
+               <view class="flower" @tap="sendWeekFlower" 
+                                    data-idx="1"
+                                    data-id="{{listBordsData[1].id}}">{{listBordsData[1].flower}}</view>
+               <view class="song-name" 
+                     @tap="playWeekListMusic"
+                     data-idx="1">{{listBordsData[1].music_name}}</view>
             </view>
             <view class="first">
-               <view class="avatar"><image mode="widthFix" src="{{listBordsData[1].avatar}}"></image></view> 
-               <view class="flower">{{listBordsData[1].flower}}</view>
-               <view class="song-name">{{listBordsData[1].music_name}}</view>
+               <view class="avatar">
+                    <image mode="widthFix" src="{{listBordsData[0].avatar}}"></image>
+               </view> 
+               <view class="flower" @tap="sendWeekFlower" 
+                                    data-idx="0" 
+                                    data-id="{{listBordsData[0].id}}">{{listBordsData[0].flower}}</view>
+               <view class="song-name"
+                     @tap="playWeekListMusic"
+                     data-idx="0">{{listBordsData[0].music_name}}</view>
             </view>
             <view class="third">
                <view class="avatar"><image mode="widthFix" src="{{listBordsData[2].avatar}}"></image></view> 
-               <view class="flower">{{listBordsData[2].flower}}</view>
-               <view class="song-name">{{listBordsData[2].music_name}}</view>
+               <view class="flower" @tap="sendWeekFlower" 
+                                    data-id="{{listBordsData[2].id}}" 
+                                    data-idx="2">{{listBordsData[2].flower}}</view>
+               <view class="song-name"
+                     @tap="playWeekListMusic"
+                     data-idx="2">{{listBordsData[2].music_name}}</view>
             </view>
         </view>
 
-        <view class="list-content">
+        <view class="list-top" wx:if="{{listBordsIndex=='2'}}">
+            <view class="second">
+               <view class="avatar"><image mode="widthFix" src="{{monthBordsData[1].avatar}}"></image></view> 
+               <view class="flower" @tap="sendMonthFlower" 
+                                    data-id="{{monthBordsData[1].id}}"
+                                    data-idx="1">{{monthBordsData[1].flower}}</view>
+               <view class="song-name"
+                     @tap="playMonthListMusic"
+                     data-idx="1">{{monthBordsData[1].music_name}}</view>
+            </view>
+            <view class="first">
+               <view class="avatar"><image mode="widthFix" src="{{monthBordsData[0].avatar}}"></image></view> 
+               <view class="flower" @tap="sendMonthFlower" 
+                                    data-id="{{monthBordsData[0].id}}"
+                                    data-idx="0">{{monthBordsData[0].flower}}</view>
+               <view class="song-name"
+                     @tap="playMonthListMusic"
+                     data-idx="0">{{monthBordsData[0].music_name}}</view>
+            </view>
+            <view class="third">
+               <view class="avatar">
+                   <image mode="widthFix" src="{{monthBordsData[2].avatar}}"></image>
+               </view> 
+               <view class="flower" @tap="sendMonthFlower" 
+                                    data-id="{{monthBordsData[2].id}}"
+                                    data-idx="2">{{monthBordsData[2].flower}}</view>
+               <view class="song-name"
+                     @tap="playMonthListMusic"
+                     data-idx="2">{{monthBordsData[2].music_name}}</view>
+            </view>
+        </view>
+
+        <view class="list-content" wx:if="{{listBordsIndex=='1'}}">
             <view class="list-item" 
                   wx:for="{{listBordsData}}" 
                   wx:key="{{index}}" 
                   wx:if="{{index>2}}"  
                   style="display:{{index<3?'none':'flex'}}">
 
-                <view class="item-left">
+                <view class="item-left" @tap="playWeekListMusic" data-idx="{{index}}">
                     <view class="item-index">{{index}}</view>
                     <view class="item-avatar"><image mode="widthFix" src="{{item.avatar}}"></image></view>
                     <view class="item-content">
@@ -43,103 +91,255 @@
                     </view>
                 </view>
                 <view class="item-right">
-                     <view class="flower">{{item.flower}}</view>
+                     <view class="flower" @tap="sendWeekFlower"  
+                                          data-id="{{item.id}}"
+                                          data-idx="{{index}}">{{item.flower}}</view>
+                </view>
+            </view>
+        </view>
+
+        <view class="list-content" wx:if="{{listBordsIndex=='2'}}">
+            <view class="list-item" 
+                  wx:for="{{monthBordsData}}" 
+                  wx:key="{{index}}" 
+                  wx:if="{{index>2}}"  
+                  style="display:{{index<3?'none':'flex'}}">
+                <view class="item-left" @tap="playMonthListMusic" data-idx="{{index}}">
+                    <view class="item-index">{{index}}</view>
+                    <view class="item-avatar">
+                         <image mode="widthFix" src="{{item.avatar}}"></image>
+                    </view>
+                    <view class="item-content">
+                        <view class="music-name">{{item.music_name}}</view>
+                        <view class="teacher-name">{{item.teacher_name}}</view>
+                    </view>
+                </view>
+                <view class="item-right">
+                     <view class="flower" @tap="sendMonthFlower"  
+                                          data-id="{{item.id}}"
+                                          data-idx="{{index}}">{{item.flower}}</view>
                 </view>
             </view>
         </view>
     </view>
-    <MusicBar class="list-music-bar" :currentMusic="currentMusic"></MusicBar>
+    <!-- <MusicBar class="list-music-bar" :currentMusic="currentMusic"></MusicBar> -->
 </view>
 </template>
 <script>
-  import wepy from 'wepy'
-  import tabBar from '../components/tabbar'
-  import MusicBar from '../components/musicBar'
-  import api from '../utils/api.js'
-  import Tips from '../utils/tip.js'
-  import {wxRequest} from '../utils/wxRequest.js'
-  export default class listBords extends wepy.component{
-       config = {
-           navigationBarTitleText:'排行榜'
-       }
+import wepy from "wepy";
+import tabBar from "../components/tabbar";
+import MusicBar from "../components/musicBar";
+import api from "../utils/api.js";
+import Tips from "../utils/tip.js";
+import { wxRequest } from "../utils/wxRequest.js";
+import {playMusic} from '../utils/playMusic.js'
+export default class listBords extends wepy.component {
+  config = {
+    navigationBarTitleText: "排行榜"
+  };
 
-       components = {
-           MusicBar:MusicBar
-       }
+  components = {
+    MusicBar: MusicBar
+  };
 
-       data = {
-           currentMusic:{
-            status:false,
-            isplay:true,
-            background:'#fff',
-            isCollect:true,
-            name:"测试歌名",
-            author:"测试作者",
-            cover:"http://iph.href.lu/88x88?text=测试封面",
-            lyrics:['测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1',
-            '测试歌词1']
-           },
-           listnav:[{
-               text:'周榜',
-               id:1,
-               active:true
-           },{
-               text:'月榜',
-               id:1,
-               active:false
-           }],
-           listBordsData:[]
-       }
+  data = {
+    currentMusic: {
+      status: false,
+      isplay: true,
+      background: "#fff",
+      isCollect: true,
+      name: "测试歌名",
+      author: "测试作者",
+      cover: "http://iph.href.lu/88x88?text=测试封面",
+      lyrics: [
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1",
+        "测试歌词1"
+      ]
+    },
+    listnav: [
+      {
+        text: "周榜",
+        id: 1,
+        active: true
+      },
+      {
+        text: "月榜",
+        id: 2,
+        active: false
+      }
+    ],
+    listBordsData: [],
+    listBordsIndex: 1,
+    monthBordsData: []
+  };
 
-       methods = {
-           changeNav(e){
-               let idx = e.currentTarget.dataset.idx;
-               let listnav = this.listnav;
-               listnav.forEach(element => {
-                   element.active = false;
-               });
-               listnav[idx].active = true;
-               this.listnav = listnav;
-               this.$apply();
-           }
-       }
-       async onLoad(){
-           console.log('listbords加载了');
-           let json = await wxRequest({},api.weekFlowerRanking);
-           console.log('周榜数据',json.data);
-           this.listBordsData = json.data;
-           this.$apply();
-       }
-  } 
+  methods = {
+    changeNav(e) {
+      let idx = e.currentTarget.dataset.idx;
+      let listnav = this.listnav;
+      listnav.forEach(element => {
+        element.active = false;
+      });
+      listnav[idx].active = true;
+      this.listnav = listnav;
+      this.listBordsIndex = listnav[idx].id;
+      this.$apply();
+    },
+    // 周榜送花
+    sendWeekFlower(e){
+       let that = this;
+        let idx = e.currentTarget.dataset.idx;
+        let id = e.currentTarget.dataset.id;
+        let listBordsData = that.listBordsData;
+        that.sendFlower({
+            id:id,
+            idx:idx,
+            dom:that,
+            arr:listBordsData
+        })
+    },
+    // 月榜送花
+    sendMonthFlower(e){
+        let that = this;
+        let idx = e.currentTarget.dataset.idx;
+        let id = e.currentTarget.dataset.id;
+        let monthBordsData = that.monthBordsData;
+        that.sendFlower({
+            id:id,
+            idx:idx,
+            dom:that,
+            arr:monthBordsData
+        })
+    },
+
+    // 播放周榜音乐
+    playWeekListMusic(e){
+        let that = this;
+        let idx = e.currentTarget.dataset.idx;
+        let oldList = wx.getStorageSync('oldList');
+        let newList = that.listBordsData;
+        wx.setStorageSync('oldList', newList)
+        playMusic({
+            oldList:oldList,
+            newList:newList,
+            changeList:true,
+            idx:idx,
+            cycle:true,
+            Dom:that,
+            Next:0
+        })
+    },
+    playMonthListMusic(e){
+        let that = this;
+        let idx = e.currentTarget.dataset.idx;
+        let oldList = wx.getStorageSync('oldList');
+        let newList = that.monthBordsData;
+        wx.setStorageSync('oldList',newList)
+        playMusic({
+            oldList:oldList,
+            newList:newList,
+            changeList:true,
+            idx:idx,
+            cycle:true,
+            Dom:that,
+            Next:0
+        })
+    }
+     
+  }
+
+// 送花
+  async sendFlower(prams) {
+      console.log("加人气");
+      let json = await wxRequest(
+        {
+          query: {
+            id:prams.id
+          }
+        },
+        api.Addflower
+      );
+      console.log(json.data);
+      if (json.data.status === 0) {
+        wx.showToast({
+          title: json.data.message,
+          image: "../image/alertf-lower.png",
+          mask: true,
+          duration: 1500
+        });
+        prams.arr[prams.idx].flower++;
+        prams.dom.$apply();
+      } else if (json.data.status === 1) {
+        wx.showToast({
+          title: json.data.message,
+          image: "../image/nozan.png",
+          mask: true,
+          duration: 1500
+        });
+      }
+    }
+
+//   格式化花的数量
+    fromFlower(prams){
+        if(prams>=1000&&prams<10000){
+            prams = (prams)/1000;
+            prams = prams.toFixed(1) + 'k';
+        }else if(prams>=10000){
+            prams = (prams)/10000;
+            prams = prams.toFixed(1) + 'w';
+        }
+        return prams;
+    }
+
+  async onLoad() {
+    console.log("listbords加载了");
+    let that = this;
+    let json = await wxRequest({}, api.weekFlowerRanking);
+    let monthData = await wxRequest({}, api.moonthFlowerRanking);
+    console.log("月榜数据", monthData.data);
+    console.log("周榜数据", json.data);
+    let listBordsData = json.data;
+    let monthBordsData = monthData.data;
+    listBordsData.map((element,index)=>{
+        element.flower = that.fromFlower(element.flower);
+    });
+    monthBordsData.map((element,index)=>{
+        element.flower = that.fromFlower(element.flower);
+    });
+    this.listBordsData = listBordsData;
+    this.monthBordsData = monthBordsData;
+    this.$apply();
+  }
+}
 </script>
 <style lang="less" scoped>
-.list-container{
-    background-attachment: fixed;
-    padding-bottom:200rpx;
-    background: url('https://qncdn.playonwechat.com/banyeyinyue/list-bg.png');
+.list-container {
+  background-attachment: fixed;
+  padding-bottom: 200rpx;
+  background: url("https://qncdn.playonwechat.com/banyeyinyue/list-bg.png");
 }
 
-.scroll-view{
-   display: block;
-   position: absolute;
-   box-sizing: border-box;
-   flex:1;
-   height: 1100rpx;
+.scroll-view {
+  display: block;
+  position: absolute;
+  box-sizing: border-box;
+  flex: 1;
+  height: 1100rpx;
 }
 
 // page{
@@ -149,217 +349,223 @@
 //     box-sizing: border-box;
 // }
 
-.list-container{
-    width: 750rpx;
-    overflow: hidden;
+.list-container {
+  width: 750rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.list-nav {
+  width: 304rpx;
+  height: 46rpx;
+  margin: 30rpx auto;
+  display: flex;
+  border: 1px solid #fbd597;
+  border-radius: 40rpx;
+  view {
+    flex: 1;
+    font-size: 24rpx;
+    text-align: center;
+    line-height: 46rpx;
+    color: #fff;
+  }
+  view:nth-of-type(1) {
+    border-radius: 40rpx 0 0 40rpx;
+  }
+  view:nth-of-type(2) {
+    border-radius: 0 40rpx 40rpx 0;
+  }
+  view.active {
+    background: #ffb400;
+    color: #333;
+  }
+}
+.list-top {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 75rpx;
+  .avatar {
+    width: 200rpx;
+    min-height: 200rpx;
+  }
+  .flower {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffa100;
+    margin: 10rpx 0;
+    font-size: 34rpx;
+  }
+  .flower:after {
+    content: " ";
+    display: block;
+    width: 13rpx;
+    height: 28rpx;
+    background-image: url("https://qncdn.playonwechat.com/banyeyinyue/list-icon-flower.png");
+    background-repeat: no-repeat;
+    background-size: 13rpx 28rpx;
+    margin-left: 10rpx;
+  }
+  .second .avatar {
+    background-image: url("https://qncdn.playonwechat.com/banyeyinyue/list-icon-second.png");
+    background-size: 114rpx 178rpx;
+    background-repeat: no-repeat;
+    background-position: bottom center;
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
+    image {
+      display: block;
+      width: 82rpx;
+      margin: 0 auto;
+      margin-bottom: 5rpx;
+      border-radius: 50%;
+    }
+  }
+  .first .avatar {
+    background-image: url("https://qncdn.playonwechat.com/banyeyinyue/list-icon-first.png");
+    background-size: 114rpx 178rpx;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    image {
+      display: block;
+      width: 106rpx;
+      margin: 0 auto;
+      margin-bottom: 5rpx;
+      border-radius: 50%;
+    }
+  }
+  .third .avatar {
+    background-image: url("https://qncdn.playonwechat.com/banyeyinyue/list-icon-thrid.png");
+    background-size: 114rpx 178rpx;
+    background-repeat: no-repeat;
+    background-position: bottom center;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    image {
+      display: block;
+      width: 82rpx;
+      margin: 0 auto;
+      margin-bottom: 5rpx;
+      border-radius: 50%;
+    }
+  }
+  .song-name {
+    color: #fff;
+    font-size: 22rpx;
+    text-align: center;
+    max-width: 200rpx;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
 }
 
-.list-nav{
-    width:304rpx;
-    height: 46rpx;
-    margin:30rpx auto;
-    display: flex;
-    border:1px solid #fbd597;
-    border-radius: 40rpx;
-    view{
-        flex:1;
-        font-size: 24rpx;
-        text-align: center;
-        line-height: 46rpx;
-        color: #fff;
-    }
-    view:nth-of-type(1){
-        border-radius: 40rpx 0 0 40rpx;
-    }
-    view:nth-of-type(2){
-        border-radius:  0 40rpx 40rpx 0;
-    }
-    view.active{
-        background: #ffb400;
-        color: #333;
-    }
-}
-.list-top{
+.list-content {
+  width: 750rpx;
+  padding-top: 60rpx;
+  .list-item {
+    width: 100%;
+    padding: 24rpx 60rpx;
+    position: relative;
     display: flex;
     justify-content: space-between;
-    padding:0 75rpx;
-    .avatar{
-      width:200rpx;
-      min-height: 200rpx;
-    }
-    .flower{
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color:#ffa100;
-        margin:10rpx 0;
-        font-size: 34rpx;
-    }
-    .flower:after{
-        content:" ";
+    .item-avatar {
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      image {
         display: block;
-        width:13rpx;
-        height: 28rpx;
-        background-image:url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-flower.png');
-        background-repeat: no-repeat;
-        background-size: 13rpx 28rpx;
-        margin-left: 10rpx;
+        width: 80rpx;
+      }
     }
-    .second .avatar{
-        background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-second.png');
-        background-size: 114rpx 178rpx;
-        background-repeat: no-repeat;
-        background-position: bottom center;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        image{
-            display: block;
-            width: 82rpx;
-            margin:0 auto;
-            margin-bottom: 5rpx;
-            border-radius: 50%;
-        }
+    .item-left {
+        flex:1;
+      display: flex;
+      align-items: center;
     }
-    .first .avatar{
-        background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-first.png');
-        background-size: 114rpx 178rpx;
-        background-repeat: no-repeat;
-        background-position: bottom center;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        image{
-            display: block;
-            width: 106rpx;
-            margin:0 auto;
-            margin-bottom: 5rpx;
-            border-radius: 50%;
-        }
+    .item-index {
+      font-size: 34rpx;
+      margin-right: 14rpx;
+      color: #fff;
+      font-weight: bold;
+      width: 50rpx;
+      text-align: center;
     }
-    .third .avatar{
-        background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-thrid.png');
-        background-size: 114rpx 178rpx;
-        background-repeat: no-repeat;
-        background-position: bottom center;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        image{
-            display: block;
-            width: 82rpx;
-            margin:0 auto;
-            margin-bottom: 5rpx;
-            border-radius: 50%;
-        }
-    }
-    .song-name{
-        color: #fff;
-        font-size: 22rpx;
-        text-align: center;
-        max-width: 200rpx;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-}
-
-.list-content{
-    width:750rpx;
-    padding-top: 60rpx;
-    .list-item{
-        width:100%;
-        padding:24rpx 60rpx;
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        .item-avatar{
-            width: 80rpx;
-            height: 80rpx;
-            border-radius: 50%;
-            overflow: hidden;
-            image{
-                display: block;
-                width: 80rpx;
-            }
-        }
-        .item-left{
-            display: flex;
-            align-items: center;
-        }
-        .item-index{
-            font-size: 34rpx;
-            margin-right: 14rpx;
-            color:#fff;
-            font-weight: bold;
-            width:50rpx;
-            text-align: center;
-        }
-    }
-    .list-item:nth-of-type(1):before{
-        content:" ";
-        display: block;
-        width: 100%;
-        border-bottom:1px solid rgba(255, 255, 255, .5);
-        position: absolute;
-        left: 0;
-        top: 0;
-        transform: scaleY(.5);
-    }
-    .list-item:after{
-        content:" ";
-        display: block;
-        width: 100%;
-        border-bottom:1px solid rgba(255, 255, 255, .5);
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        transform: scaleY(.5);
-    }
-    .item-content{
-        padding-left: 20rpx;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 100%;
-        .music-name{
-             font-size: 26rpx;
-             margin-bottom: 10rpx;
-             color:#fff;
-        }
-        .teacher-name{
-            font-size: 22rpx;
-            color:#c7c5c7;
-        }
-    }
-    .item-right{
-        display: flex;
-        align-items: center;
-        color:#ffa100;
-        .flower{
-            display: flex;
-            align-items: center;
-            font-size: 34rpx;
-        }
-        .flower:after{
-            content:" ";
-            display: block;
-            width:13rpx;
-            height: 28rpx;
-            margin-left: 10rpx;
-            background-image: url('https://qncdn.playonwechat.com/banyeyinyue/list-icon-flower.png');
-            background-size: 13rpx 28rpx;
-        }
-    }
-}
-
-.list-music-bar{
-    position: fixed;
+  }
+  .list-item:nth-of-type(1):before {
+    content: " ";
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    position: absolute;
     left: 0;
-    bottom:0;
+    top: 0;
+    transform: scaleY(0.5);
+  }
+  .list-item:after {
+    content: " ";
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    transform: scaleY(0.5);
+  }
+  .item-content {
+    padding-left: 20rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    .music-name {
+      font-size: 26rpx;
+      margin-bottom: 10rpx;
+      color: #fff;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 380rpx;
+    }
+    .teacher-name {
+      font-size: 22rpx;
+      color: #c7c5c7;
+    }
+  }
+  .item-right {
+    display: flex;
+    align-items: center;
+    color: #ffa100;
+    min-width: 100rpx;
+    .flower {
+      display: flex;
+      align-items: center;
+      font-size: 34rpx;
+    }
+    .flower:after {
+      content: " ";
+      display: block;
+      width: 13rpx;
+      height: 28rpx;
+      margin-left: 10rpx;
+      background-image: url("https://qncdn.playonwechat.com/banyeyinyue/list-icon-flower.png");
+      background-size: 13rpx 28rpx;
+    }
+  }
 }
 
+.list-music-bar {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+}
 </style>

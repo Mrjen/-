@@ -1,8 +1,11 @@
 <template>
   <view class="container">
-      <view class="music-item" 
+      <view class="music-list">
+         <view class="music-item" 
             wx:for="{{music}}"
-            wx:key="{{index}}">
+            wx:key="{{index}}"
+            data-idx="{{index}}"
+            @tap="playTeacherMusic">
          <view class="item-left">
              <view class="music-cover">
                  <image mode="widthFix" src="{{item.cover}}"></image>
@@ -14,6 +17,10 @@
          </view>
          <view class="item-right"></view>
       </view>
+      </view>
+      
+       <musicBar class="teach-music-bar" :currentMusic.sync="currentMusic">
+       </musicBar>
   </view>
 </template>
 
@@ -21,13 +28,40 @@
 import wepy from 'wepy'
 import api from '../utils/api.js'
 import {wxRequest} from '../utils/wxRequest.js'
+import {playMusic} from '../utils/playMusic.js'
+import musicBar from '../components/musicBar'
+import {getMoreData} from '../utils/getMoreData.js'
 export default class teacherMusicList extends wepy.page{
      data = {
-        music:[]
+        music:[],
+        currentMusic:[],
+        musicStatus:1,
+        page:1,
+        tid:"" // 老师id
+     }
+
+     components = {
+         musicBar:musicBar
      }
      
      methods = {
-         
+        playTeacherMusic(e){
+           console.log('播放这个老师的歌曲');
+           let that = this;
+           let oldList = wx.getStorageSync('oldList');
+           let newList = that.music;
+           let idx = e.currentTarget.dataset.idx;
+           wx.setStorageSync('oldList', newList)
+           playMusic({
+               oldList:oldList,
+               newList:newList,
+               changeList:true,
+               idx:idx,
+               cycle:true,
+               Dom:that,
+               Next:0
+           })
+        }
      }
 
      async onLoad(options){
@@ -39,7 +73,42 @@ export default class teacherMusicList extends wepy.page{
             }
         },api.teacherMusic)
         this.music = json.data;
+        this.tid = options.id;
         this.$apply();
+     }
+
+     onShow(){
+         let currentMusic = wx.getStorageSync('currentMusic');
+         currentMusic.background = '#fff';
+         let bgmusicStatus = wx.getBackgroundAudioManager();
+         if(bgmusicStatus.paused===false){
+              this.musicStatus = 1;
+              this.$apply();
+         }else{
+              this.musicStatus = 2;
+              this.$apply();
+         }
+         currentMusic.playing = this.musicStatus;
+         this.currentMusic = currentMusic;
+         console.log('this.currentMusic',this.currentMusic)
+         this.$apply();
+     }
+
+     onReachBottom(){
+         let page = this.page;
+         let that = this;
+         let tid = this.tid;
+         getMoreData({query:{page,id:tid}},api.teacherMusic,that,function(res){
+             console.log(res.data)
+             let oldData = that.music;
+             if(res.data.length>0){
+                 that.music = [...oldData,...res.data];
+                 that.page++;
+             }else{
+                 that.music = oldData;
+             }
+             that.$apply();
+         })
      }
  }
 </script>
@@ -47,6 +116,10 @@ export default class teacherMusicList extends wepy.page{
 <style lang="less" scoped>
 .container{
     width:750rpx;
+}
+
+.music-list{
+    margin-bottom:200rpx;
 }
 
 .music-item{
@@ -63,7 +136,6 @@ export default class teacherMusicList extends wepy.page{
         overflow: hidden;
         border-radius: 50%;
         margin-right:20rpx;
-        border:1px solid red;
         image{
           width:88rpx;
           border-radius: 50%;
@@ -85,5 +157,13 @@ export default class teacherMusicList extends wepy.page{
         color: #908f94;
         font-size: 26rpx;
     }
+}
+
+.teach-music-bar{
+    position: fixed;
+    left: 0;
+    bottom:0;
+    background: #fff;
+    box-shadow: 0 -4rpx 10rpx rgba(0, 0, 0, .1);
 }
 </style>

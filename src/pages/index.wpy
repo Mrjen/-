@@ -22,6 +22,9 @@
                 :MyCollectTeacher.sync="MyCollectTeacher" 
                 :MineUserInfo.sync="MineUserInfo"></Mine>
       </view>
+
+       
+
         <tab :active="currentTab" 
              :animationData="animationData" 
              :MineUserInfo.sync="MineUserInfo" ></tab>
@@ -113,7 +116,36 @@ export default class Index extends wepy.page {
   };
 
   async onLoad() {
-     wx.setStorageSync('currentTab',0)
+     wx.setStorageSync('currentTab',0);
+     setTimeout(() => {
+         let musicStatus = wx.getBackgroundAudioManager();
+         console.log(musicStatus.paused);
+         if(musicStatus.paused===false){
+            wx.setStorageSync('musicStatus',1); //缓存音乐播放状态 1 播放中 2 暂停中 3 停止了
+         }
+     }, 100);
+
+    //  获取中奖信息
+    const reward = await wxRequest({},api.weekReward);
+    console.log('获取中奖信息',reward.data);
+    if(reward.data.winner=='1'){
+       
+    }
+
+    //获取今日是否提醒送花
+    let _date = null;
+    let popupdate = wx.getStorageSync('popupdate');
+    if(!popupdate){
+       _date = new Date();
+       popupdate = _date.getDate();
+       wx.setStorageSync('popupdate', popupdate);
+    }
+
+    if(_date!=popupdate){
+        //弹提示送花弹窗
+    }
+
+     
   }
 
   onReachBottom(){

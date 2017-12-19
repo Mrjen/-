@@ -219,6 +219,93 @@ page{
     }
   }
 }
+
+.win-popup{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top:0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  .popup-in{
+     background-image:url('https://qncdn.playonwechat.com/banyeyinyue/get-award-bg.png');
+     background-size: 100% 100%;
+     width:418rpx;
+     height:532rpx;
+     margin-top: 250rpx;
+     color: #fff;
+     padding:0 30rpx;
+     padding-top: 274rpx;
+     position: relative;
+     .popup-content{
+       font-size:25rpx;
+       text-align: center;
+       line-height: 40rpx;
+     }
+     .popup-num{
+        text-align: center;
+     }
+     .sure-btn{
+       width: 200rpx;
+       font-size: 25rpx;
+       border:1px solid #63c6ea;
+       text-align: center;
+       margin:0 auto;
+       margin-top: 45rpx;
+       color: #63c6ea;
+       height: 44rpx;
+       line-height: 44rpx;
+     }
+     .popu-colse{
+       width:44rpx;
+       height: 44rpx;
+       position: absolute;
+       right:26rpx;
+       top: 192rpx;
+       background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAApCAMAAACfvvDEAAAAS1BMVEXLxsYAAAD////x8PDU0M/18/P9/f3j4OHz8vL////////////o5eX////d2dnTz8/////////////////o5ub////////////////h10bLAAAAGXRSTlNIAGaXUqRhU1xaJU1VT1BLLiciClY9DxA8aiDn4wAAATtJREFUOMulle16wiAMRuOpC4V+2dbq7v9KV3V7Io3i5vKPcB54E5Igu8zmtDRR0dgsac63MjI13FuTnpBjBOq2H0Rk6NsaiOMD8tSBBrm3oNCdtuSkxmWsTjl5gFoeWQ0HI6/gUR7bcUWNnCDIMwsw/ZAnzU70p+r5m+w2Gr3W7kaO6NVRVfsts68qWU0Zr2Qk3MiPLbpfXTep8UIm1PyGZg4lrWRD2Oz4ZaDZyQxuzy9glkTtjvEX1CT5pHXSvJKWRRp6F4WPrqeTyCAOdWkYiKKIONSnFhUQjzrwgukvSTWd7vaNTovdR5THbvksZqllsTcqZr4m2bsXXxNmq6VShQQaq89i1SnJar5UyYFofVTsDmW03ix0nPXm7vy63/8yQ2wutU/AFg7vzLry/HxjJpfn/H/+jtf/0RcvQw6ma3cIfwAAAABJRU5ErkJggg==');
+       background-size: 100% 100%;
+     }
+  }
+}
+
+.day-popup{
+   width: 100%;
+   height: 100%;
+   position: fixed;
+   left: 0;
+   top:0;
+   background: rgba(0, 0, 0, 0.3);
+   z-index: 20;
+   display: flex;
+   justify-content: center;
+   padding-top: 300rpx;
+   .popup-in{
+     width: 470rpx;
+     height: 446rpx;
+     background-image:url('https://qncdn.playonwechat.com/banyeyinyue/home-popup.png');
+     background-size: 100% 100%;
+     padding:0 30rpx;
+     padding-top: 283rpx;
+     .popu-content{
+       text-align: center;
+       font-size: 27rpx;
+       line-break: 44rpx;
+       color: #fff;
+     }
+     .sure-btn{
+       width: 50rpx;
+       height: 50rpx;
+       background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADEAAAAxCAMAAABEQrEuAAAAdVBMVEXLxsYAAAD////7+vr39/fSzs7////V0dHi4OD+/v78+/v////////////u7e3q5+fj4ODa1tb////////19PT////u7OzV0ND////////////////////////d2dn////08vL////////7+vr19PTr6en////pEbV+AAAAJnRSTlNIAGZhukoDU2r03WBbVY1WU05BG15RWUw8JxIXMQ1fGaMwDsyvgYPHDS0AAAHrSURBVEjHpdbrcqowFAXg3RUIKOEiCN617Tn1/R+xaZiyYlKYcdx/FDOf5LZ3Im9h6NNH25sChenb801H7aHo2gJ+FG23JPShBKCGZpOmkqabZlAAyoOeE6cSUPVO/NjVyprbn0LvAdVIHI01ex2LSwnU8nfUQHkJxdFAbWQuNgrmSOFAgW0q85FuURx98WmBLMcW5kKhS4IFUupJ7KG8LmUzHVPY/4oO8AadrGNydcMHulHoErUH7veI/L9X4ySX2okD1AOwJB8f+NtIFA5OGDReo4uVR7J/7pefjjUwP6KD8kFIsrX3rNBZ0aKOAMmVwI2kfRNdYEcQknxlv3Iqdii0nKZOXV0rSRUC162TnDGIDf4ho6rcR0IgAz6k9WYqX9/jSB5yBa30/npnMXl/3PboxSCVBVIFmwtG4IuYvIeisILPXOJgGAyA7+DCByR8h6FYIBSGc8XIw/nN/Lma1oNRBWBcdK4H15xgngw4T/uK+eYmtQoJ9xX3rjfqSiQi097180OyCYQkYX4wB/18mwgBc5B5TjDG1yoADQxrCfPNAiYMAWsJ61XOEZIQsF6xJlYEJASsiay7lWsMSBLVXRu6n6/tGWt7r589Pz6fPqOePgefPmtfOc8Zt/k7wwv3kpfvPvH9qtNR+zfKA0/FVWQydQAAAABJRU5ErkJggg==');
+       margin:0 auto;
+       background-size: 100% 100%;
+       margin-top: 30rpx;
+     }
+   }
+}
+
+
 </style>
 <template>
   <view class="home-container">
@@ -248,7 +335,7 @@ page{
       </view>
 
       <image class="body-bg" src="{{currentMusic.cover}}"></image>
-      <button class="kefu-btn" open-type="concant"></button>
+      <button class="kefu-btn" @tap="toCancatUs"></button>
       <view class="kefu-qipao"></view>
 
       <view class="option">
@@ -283,7 +370,6 @@ page{
                <image wx:else 
                       src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-share-active.png"></image>
            </button>
-           
        </view>
 
        <view class="music-progress row-between">
@@ -315,6 +401,27 @@ page{
            </view>
        </view>
         
+       <!-- 中奖弹窗 -->
+       <view class="win-popup" wx:if="{{winPopup}}">
+           <view class="popup-in">
+               <view class="popup-content">恭喜亲，您助力的老师获得周冠军</view>
+               <view class="popup-content">领取助力奖励</view>
+               <view class="popup-content">复制下方中奖码</view>
+               <view class="popup-num">334364436</view>
+               <view class="sure-btn">点击复制</view>
+               <view class="popu-colse" @tap="closeWinPopup"></view>
+           </view>
+       </view>
+       <!-- 中奖弹窗 -->
+       <view class="day-popup" wx:if="{{dayPopup}}">
+           <view class="popup-in">
+               <view class="popu-content">把小花花送给喜欢的老师，支持她~
+每周即可参与抽奖活动！</view>
+               <!-- <view class="popu-content">复制下方中奖码</view> -->
+               <view class="sure-btn" @tap="closeDayPoup"></view>
+           </view>
+       </view>
+
       </view>
 </template>
 
@@ -340,7 +447,9 @@ export default class Home extends wepy.component {
     currentMusic: [],
     LyHeight: 0,
     musicBarWidth: 0, //音乐进度条
-    musicSatatus: 1 //后台音乐播放状态 1播放 0 暂停
+    musicSatatus: 1, //后台音乐播放状态 1播放 0 暂停
+    winPopup:false,
+    dayPopup:false
   };
 
   props = {
@@ -359,6 +468,13 @@ export default class Home extends wepy.component {
   }
 
   methods = {
+    // 客服
+    toCancatUs(){
+       let currentMusic = wx.getStorageSync('currentMusic')
+       wx.navigateTo({
+          url: `../pages/kefu?teacher_name=${currentMusic.teacher_name}`
+       })
+    },
     // 暂停音乐
     PauseMusic() {
       wx.pauseBackgroundAudio();
@@ -489,6 +605,16 @@ export default class Home extends wepy.component {
             duration: 1500
           })
        }
+    },
+    // 关闭日弹窗
+    closeDayPoup(){
+       this.dayPopup = 0;
+       this.$apply();
+    },
+    // 关闭中奖弹窗
+    closeWinPopup(){
+       this.winPopup = 0;
+       this.$apply();
     }
 
   };
@@ -519,9 +645,36 @@ export default class Home extends wepy.component {
     wx.setStorageSync("midx", 0);
     wx.setStorageSync("oldList", music);
     that.$apply();
+
+
+    //  获取中奖信息
+    const reward = await wxRequest({},api.weekReward);
+    console.log('获取中奖信息',reward.data);
+    if(reward.data.winner=='1'){
+        that.winPopup = 1;
+        that.$apply();
+    }
+
+    //获取今日是否提醒送花
+    let _date = null;
+    let popupdate = wx.getStorageSync('popupdate');
+    if(!popupdate){
+       _date = new Date();
+       popupdate = _date.getDate();
+       wx.setStorageSync('popupdate', popupdate);
+    }
+
+    if(_date!=popupdate){
+        //弹提示送花弹窗
+       if(that.winPopup != 1){
+          that.dayPopup = 1;
+          that.$apply();
+       }
+    }
   }
   onShareAppMessage() {
     return {};
   }
+
 }
 </script>

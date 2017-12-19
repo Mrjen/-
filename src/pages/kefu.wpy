@@ -1,0 +1,25 @@
+<template>
+<view class="container">
+    <web-view src="{{webUrl}}"></web-view>
+</view>
+</template>
+
+<script>
+import wepy from 'wepy';
+export default class KeFu extends wepy.page {
+    data = {
+      webUrl:''
+    }
+
+    onLoad(options){
+        console.log(options)
+        this.webUrl = `https://hpchat.playonwechat.com/index/index/mobile/?teacher_name=${options.teacher_name}`
+        this.$apply();
+        console.log(this.webUrl)
+    }
+}  
+</script>
+
+<style lang="less">
+
+</style>

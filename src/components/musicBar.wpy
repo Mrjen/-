@@ -1,56 +1,45 @@
 <template>
   <view class="music-bar">
       <solt class="bar-inner" 
-            style="background:{{currentMusic.background}}">
+            style="background:{{currentMusic.background=='#fff'}}">
           <view class="music-cover">
               <image mode="widthFix" 
                      src="{{currentMusic.cover}}"></image></view>
           <view class="music-info">
               <view class="info">
                   <view class="music-name"
-                        style="color:{{currentMusic.background=='#fff'?'#000':'#fff'}}">{{currentMusic.name}}</view>
-                  <view class="music-author">{{currentMusic.author}}</view>
+                        style="color:{{currentMusic.background=='#fff'?'#000':'#fff'}}">{{currentMusic.music_name}}{{currentMusic.collected}}</view>
+                  <view class="music-author">{{currentMusic.teacher_name}}</view>
               </view>
               <view class="option-view">
-                  <!-- {{currentMusic.background==='#fff'?'true':'false'}} -->
-                  <block>
-                    <view class="play-view baidiplay" wx:if="{{currentMusic.background=='#fff'?true:false}}">
-                        <image wx:if="{{currentMusic.isplay}}" 
+                  <block wx:if="{{currentMusic.background==='#fff'?1:0}}">
+                    <view class="play-view baidiplay">
+                        <image  @tap="pauseBgMusic" wx:if="{{currentMusic.playing=='1'?1:0}}"
                             src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-pause.png">
                         </image>
-                        <image wx:else 
-                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-pause.png">
+                        <image  @tap="playBgMusic" wx:else
+                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-play.png">
                         </image>
                     </view>
-
-                    <view class="play-view baidipause" wx:else>
-                        <image wx:if="{{currentMusic.isplay}}" 
-                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-pause.png">
-                        </image>
-                        <image wx:else
-                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-play.png">
-                        </image> 
+                    <view class="play-view baidi-collect">
+                         <image wx:if="{{currentMusic.collected=='1'?1:0}}" 
+                                @tap="removeCollect"
+                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png"></image>
+                         <image wx:else 
+                                @tap="addCollect"
+                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-collect.png"></image>
+                         
                     </view>
                   </block>
 
-                  <block>
-                        <view class="play-view baidicollect" wx:if="{{currentMusic.background==='#fff'?true:false}}">
-                            <image wx:if="{{currentMusic.isCollect}}" 
+                  <block class="play-view baidicollect" wx:elif="{{currentMusic.background==='#000'?1:0}}">
+                        <view>
+                            <image wx:if="{{currentMusic.isCollect=='0'?1:0}}" 
                                 src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect.png">
                             </image>
                             
                             <image wx:else 
                                 src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png">
-                            </image>
-                        </view>
-
-                        <view class="play-view heidicollect" wx:else>
-                            <image wx:if="{{currentMusic.isCollect}}"
-                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png">
-                            </image>
-
-                            <image wx:else  
-                                src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-collect.png">
                             </image>
                         </view>
                   </block>
@@ -62,13 +51,68 @@
 
 <script>
 import wepy from "wepy"
+import {playMusic} from '../utils/playMusic.js'
+import {wxRequest} from '../utils/wxRequest.js'
+import Tips from '../utils/tip.js'
+import api from '../utils/api.js'
 export default class MusicBar extends wepy.component{
     data = {
-
+       currentMusic:{}
     }
 
     props = {
-        currentMusic:{}
+        currentMusic:{
+            twoWay:true
+        }
+    }
+     
+    methods = {
+        // musicbar暂停播放
+        pauseBgMusic(){
+            console.log("暂停音乐播放")
+            wx.pauseBackgroundAudio();
+            this.currentMusic.playing = 2;
+            this.$apply();
+        },
+        // musicbar继续播放
+        playBgMusic(){
+            console.log('播放背景音乐');
+            let that = this;
+            let oldList = wx.getStorageSync('oldList');
+            let idx = wx.getStorageSync('midx');
+            playMusic({
+                oldList:oldList,
+                newList:[],
+                changeList:false,
+                idx:idx,
+                cycle:true,
+                Dom:that,
+                Next:0
+            });
+            that.currentMusic.playing = 1;
+            that.$apply();
+        },
+        // musicbar取消收藏
+        async removeCollect(e){
+           let that = this;
+           let currentMusic = wx.getStorageSync('currentMusic');
+           let json = await wxRequest({query:{id:currentMusic.id}},api.disCollect);
+           Tips.success("取消收藏成功");
+           that.currentMusic.collected = 0;
+           that.$apply();
+           console.log(that.currentMusic);
+        },
+        // musicbar收藏
+        async addCollect(e){
+          let that = this;
+          let currentMusic = wx.getStorageSync('currentMusic');
+          let json = await wxRequest({query:{id:currentMusic.id}},api.Collect);
+          Tips.success("收藏成功");
+          console.log(that.currentMusic);
+          that.currentMusic.collected = 1;
+          that.$apply();
+          console.log(that.currentMusic);
+        }
     }
 }  
 </script>
@@ -140,6 +184,14 @@ export default class MusicBar extends wepy.component{
                 height: 60rpx;
             }
         }
+    }
+}
+
+.baidicollect{
+    image{
+        display: block;
+        width:50rpx;
+        height: 50rpx;
     }
 }
 </style>

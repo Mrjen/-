@@ -16,7 +16,8 @@ export default class extends wepy.app {
   config = {
     pages: [
       "pages/index",
-      'pages/teacherMusicList'
+      'pages/teacherMusicList',
+      'pages/kefu'
     ],
     window: {
       backgroundTextStyle: "light",

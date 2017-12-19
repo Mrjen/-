@@ -29,13 +29,18 @@ const delicateAndMusics = apiUrl + '/music/App/delicateAndMusics'
 // 周排行榜
 const weekFlowerRanking  = apiUrl + '/music/App/weekFlowerRanking'
 // 月榜
-const moonthFlowerRanking = apiUrl + '/music/App/weekFlowerRanking'
+const moonthFlowerRanking = apiUrl + '/music/App/moonthFlowerRanking'
 // 启动页广告
 const statAd = apiUrl + '/music/App/startAd'
 // 分享二维码
 const shareCode = apiUrl + '/music/App/shareQrcode'
 // 统计歌曲
 const songPlayCount = apiUrl + '/music/App/play'
+// 获取老师页面banner
+const teachBanner = apiUrl + '/music/App/bannerlist'
+// 获取周中奖信息
+const weekReward = apiUrl + '/music/App/weekReward'
+
 
 
 module.exports = {
@@ -56,5 +61,7 @@ module.exports = {
     moonthFlowerRanking,
     statAd,
     shareCode,
-    songPlayCount
+    songPlayCount,
+    teachBanner,
+    weekReward
 }

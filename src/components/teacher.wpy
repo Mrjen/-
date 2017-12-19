@@ -1,6 +1,6 @@
 <template>
 <view class="teacher-container">
-    <mySwiper></mySwiper>
+    <mySwiper :teachBanner="teachBanner"></mySwiper>
     <view class="nav-bar">
         <view wx:for="{{navbar}}"
               class="nav-item {{item.active?'active':''}}" 
@@ -20,8 +20,10 @@
               wx:for="{{childtearchData}}"
               wx:key="{{index}}"
               data-id="{{item.id}}"
-              @tap="toTeachDeatil">
-             <view class="item-left">
+              >
+             <view class="item-left"
+                   @tap="toTeachDeatil"
+                   data-id="{{item.id}}">
                  <view class="teach-avatar">
                     <image mode="widthFix" src="{{item.avatar}}"></image>
                  </view>
@@ -52,7 +54,8 @@
               wx:for="{{officialData}}"
               wx:key="{{index}}"
               data-id="{{item.id}}"
-              @tap="toTeachDeatil">
+              data-idx="{{index}}"
+              @tap="playTeacherMusic">
              <view class="teach-avatar">
                  <image mode="widthFix" src="{{item.cover}}"></image>
              </view>
@@ -77,6 +80,7 @@ import musicBar from "../components/musicBar";
 import api from "../utils/api.js";
 import Tips from "../utils/tip.js";
 import { wxRequest } from "../utils/wxRequest.js";
+import { playMusic } from '../utils/playMusic.js';
 export default class Teacher extends wepy.component {
   config = {
     navigationBarTitleText: "老师"
@@ -88,26 +92,27 @@ export default class Teacher extends wepy.component {
     },
     teachNav: {
       twoWay: true
+    },
+    teachBanner:{
+        twoWay:true
     }
   };
 
   data = {
-    navbar: [
-      {
+    navbar: [{
         bg: "",
         text: "老师频道",
         id: 1,
         active: true
-      },
-      {
+      },{
         bg: "",
         text: "官方频道",
         id: 2,
         active: false
-      }
-    ],
+      }],
     childtearchData: [],
-    officialData: []
+    officialData: [],
+    teachBanner:[]
   };
 
   components = {
@@ -146,6 +151,24 @@ export default class Teacher extends wepy.component {
        wx.navigateTo({
          url: '../pages/teacherMusicList?id='+id
         })
+    },
+
+    // 听这个列表的音乐
+    playTeacherMusic(e){
+       let that = this;
+       let idx = e.currentTarget.dataset.idx;
+       let oldList = wx.getStorageSync('oldList');
+       let newList = this.officialData;
+       wx.setStorageSync('oldList', newList);
+       playMusic({
+           oldList:oldList,
+           newList:newList,
+           changeList:true,
+           idx:idx,
+           cycle:true,
+           Dom:that,
+           Next:0
+       })
     },
 
     // 收藏老师
@@ -193,7 +216,7 @@ export default class Teacher extends wepy.component {
     console.log("官方频道", office.data);
     console.log("老师频道", json.data);
     this.childtearchData = json.data;
-    this.officialData = office.data;
+    this.officialData = office.data;    
     this.$parent.childtearchData = json.data;
     this.$parent.officialData = office.data;
     this.$apply();

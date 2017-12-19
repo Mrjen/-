@@ -41,6 +41,7 @@ function playMusic(currentData){
         });
     }else{
         console.log("不切换列表",i);
+        console.log('oldList',oldList)
         wx.setStorageSync('midx',i);
           console.log('oldlist23',oldList[i].audio);
           wx.playBackgroundAudio({
@@ -50,7 +51,7 @@ function playMusic(currentData){
                 console.log(oldList[i].music_name)
                 let midx = wx.getStorageSync('midx');
                 wx.onBackgroundAudioStop(function(){
-                    
+
                 })
                 wx.setStorageSync('currentMusic',oldList[i])
             },

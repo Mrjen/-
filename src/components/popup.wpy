@@ -40,6 +40,7 @@
 
 <script>
 import wepy from "wepy"
+import {playMusic} from '../utils/playMusic.js'
 export default class popup extends wepy.component {
     data = {
         animatePopup:{},
@@ -73,7 +74,24 @@ export default class popup extends wepy.component {
 
     methods = {
         nextMusic(){
-           console.log("下一曲")
+           console.log("下一曲");
+           let that = this;
+           let oldList = wx.getStorageSync('oldList');
+           let idx = wx.getStorageSync('midx');
+           if((idx+1)===oldList.length){
+               idx = 0;
+           }else{
+               idx = idx + 1;
+           }
+           wx.setStorageSync('midx',idx);
+           playMusic({
+               oldList:oldList,
+               newList:[],
+               changeList:false,
+               idx:idx,
+               cycle:true,
+               Dom:that
+           })
         },
         collectMusic(){
            console.log("收藏这首歌")

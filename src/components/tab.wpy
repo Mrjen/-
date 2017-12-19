@@ -88,7 +88,11 @@ export default class Tab extends wepy.component {
           }
       }
       if(pageIndex=='2'){
-         console.log("点击首页")
+         console.log("点击首页");
+         let playMusicStatus = wx.getStorageSync('playMusicStatus');
+         if(playMusicStatus){
+            this.$parent.playMusicStatus = playMusicStatus;
+         }
       }
       
       this.$apply();

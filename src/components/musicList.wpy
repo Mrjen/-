@@ -14,11 +14,11 @@
               <view class="tips">Danger in loving you</view>
           </view>
       </view>
-      <view class="play"></view>
+      <view class="play" @tap="playFeaturedMusic"></view>
   </view>
 
   <view class="play-option-bar">
-      <view class="play-view view">
+      <view class="play-view view" @tap="playAllMusic">
           <image class="icon" src="https://qncdn.playonwechat.com/banyeyinyue/musiclist-icon-play.png"></image>
           播放全部
       </view>
@@ -63,6 +63,7 @@ import Popup from "../components/popup";
 import { wxRequest } from "../utils/wxRequest.js";
 import { playMusic } from "../utils/playMusic.js";
 import api from '../utils/api.js'
+import Tips from '../utils/tip.js'
 export default class musicList extends wepy.component {
   config = {
     navigationBarTitleText: "歌曲",
@@ -80,6 +81,43 @@ export default class musicList extends wepy.component {
   };
 
   methods = {
+    //  播放精选音乐
+    playFeaturedMusic(e){
+        let that = this;
+        let oldList = wx.getStorageSync('oldList');
+        let newList = this.delicate;
+        console.log('newList',newList)
+        wx.setStorageSync('oldList',newList);
+        playMusic({
+           oldList:oldList,
+           newList:newList,
+           changeList:true,
+           idx:0,
+           cycle:true,
+           Dom:that,
+           Next:0
+        })
+       Tips.success('播放精选音乐')
+    },
+
+    // 播放全部
+    playAllMusic(){
+       let that = this;
+       let oldList = wx.getStorageSync('oldList');
+       let newList = this.musicListData;
+       wx.setStorageSync('oldList',newList);
+       playMusic({
+           oldList:oldList,
+           newList:newList,
+           changeList:true,
+           idx:0,
+           cycle:true,
+           Dom:that,
+           Next:0
+       })
+       Tips.success('播放全部')
+    },
+
     optionMisuc(e) {
       console.log(e.currentTarget.dataset.id);
       this.PopupisShow = true;
@@ -107,6 +145,8 @@ export default class musicList extends wepy.component {
      that.$parent.musicListData = json.data.musices;
      that.$apply();
   }
+
+  
 }
 </script>
 
