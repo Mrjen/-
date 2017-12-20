@@ -33,7 +33,9 @@
             wx:for="{{musicListData}}" 
             data-id="{{item.id}}"
             wx:key="{{index}}">
-          <view class="item-left">
+          <view class="item-left" 
+                data-idx="{{index}}"
+                @tap="playInList">
               <view class="item-idx">{{index+1}}</view>
               <view class="item-cover">
                   <image mode="widthFix" src="{{item.cover}}"></image>
@@ -70,6 +72,18 @@ export default class musicList extends wepy.component {
     backgroundColor: "#000"
   };
 
+  props = {
+     musicListData:{
+       twoWay:true
+     },
+     musicBarWidth:{
+       twoWay:true
+     },
+     currentMusic:{
+       twoWay:true
+     }
+  }
+
   components = {
     Popup: Popup
   };
@@ -77,7 +91,9 @@ export default class musicList extends wepy.component {
   data = {
     PopupisShow: false,
     delicate:[],
-    musicListData: []
+    musicListData: [],
+    currentMusic:[],
+    musicBarWidth:[]
   };
 
   methods = {
@@ -88,6 +104,12 @@ export default class musicList extends wepy.component {
         let newList = this.delicate;
         console.log('newList',newList)
         wx.setStorageSync('oldList',newList);
+        let currentMusic = newList[0];
+        wx.setStorageSync('currentMusic',currentMusic);
+        that.$parent.currentMusic = currentMusic;
+        that.currentMusic = currentMusic;
+        that.$apply();
+        wx.setStorageSync('midx',0)
         playMusic({
            oldList:oldList,
            newList:newList,
@@ -100,12 +122,50 @@ export default class musicList extends wepy.component {
        Tips.success('播放精选音乐')
     },
 
+    // 列表内的播放
+    playInList(e){
+       let that = this;
+       let idx = e.currentTarget.dataset.idx;
+       let oldList = wx.getStorageSync('oldList');
+       let newList =  this.musicListData;
+        console.log('newList',newList)
+        wx.setStorageSync('oldList',newList);
+        let currentMusic = newList[idx];
+        wx.setStorageSync('currentMusic',currentMusic);
+        that.$parent.currentMusic = currentMusic;
+        that.currentMusic = currentMusic;
+        that.musicBarWidth = 0;
+        that.$parent.musicBarWidth = 0;
+        that.$apply();
+        wx.setStorageSync('midx',idx)
+        wx.setStorageSync('oldList',newList);
+       playMusic({
+           oldList:oldList,
+           newList:newList,
+           changeList:true,
+           idx:idx,
+           cycle:true,
+           Dom:that,
+           Next:0
+        })
+    },
+
     // 播放全部
     playAllMusic(){
        let that = this;
        let oldList = wx.getStorageSync('oldList');
        let newList = this.musicListData;
-       wx.setStorageSync('oldList',newList);
+        wx.setStorageSync('oldList',newList);
+        console.log('newList',newList)
+        let currentMusic = newList[0];
+        wx.setStorageSync('currentMusic',currentMusic);
+        that.$parent.currentMusic = currentMusic;
+        that.$parent.musicBarWidth = 0;
+        that.musicBarWidth = 0;
+        that.currentMusic = currentMusic;
+        that.$apply();
+        wx.setStorageSync('midx',0)
+
        playMusic({
            oldList:oldList,
            newList:newList,
@@ -137,13 +197,7 @@ export default class musicList extends wepy.component {
   }
 
   async onLoad(){
-     let that = this;
-     let json = await wxRequest({query:{page:0}},api.delicateAndMusics);
-     console.log('音乐页面数据',json.data)
-     that.delicate = json.data.delicate;
-     that.musicListData = json.data.musices;
-     that.$parent.musicListData = json.data.musices;
-     that.$apply();
+     
   }
 
   

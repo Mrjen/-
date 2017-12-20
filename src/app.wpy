@@ -38,13 +38,15 @@ export default class extends wepy.app {
 
   onLaunch() {
     this.testAsync();
-    getUserMsg();
-    wx.login({
-      success: function(res) {
-        // success
-        wxRequest({ query: { code: res.code } }, api.auth);
+      wx.login({
+       success: function(res) {
+         wxRequest({ query: { code: res.code } }, api.auth,true);
       }
     });
+  }
+
+  onShow(){
+     
   }
 
   sleep(s) {

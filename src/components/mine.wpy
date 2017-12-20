@@ -6,19 +6,19 @@
        </view>
        <view class="nickname">{{MineUserInfo.nickName}}</view>
        <view class="option-bar">
-            <view class="item-btn">
+            <view class="item-btn" @tap="clickCollect">
                 <text>收藏</text>
                 <view class="icon">
-                    <image wx:if="{{activeCollect}}" 
+                    <image wx:if="{{myCollect}}" 
                            src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-heidi-collect-active.png"></image>
                     <image wx:else 
                            src="https://qncdn.playonwechat.com/banyeyinyue/icon-home-collect.png"></image>
                 </view>
             </view>
-            <view class="item-btn">
+            <view class="item-btn" @tap="clickMsg">
                 <text>消息</text>
                 <view class="icon">
-                     <image wx:if="{{activeMsg}}" 
+                     <image wx:if="{{myMsg}}" 
                             src="https://qncdn.playonwechat.com/banyeyinyue/mine-icon-notice-active.png"></image>
                      <image wx:else 
                             src="https://qncdn.playonwechat.com/banyeyinyue/mine-icon-notice.png"></image>
@@ -33,8 +33,8 @@
        </view>
        <image class="info-bg" src="{{MineUserInfo.avatarUrl}}"></image>
    </view>
-
-   <view class="collect-content">
+   <block>
+      <view class="collect-content" wx:if="{{myCollect}}">
         <view class="collect-nav">
            <view wx:for="{{collectNav}}"
                  class="nav-item {{item.active?'active':''}}" 
@@ -86,7 +86,14 @@
                 </view>
             </view>
         </view>
-   </view>
+      </view>
+      <view class="my-msg" wx:if="{{myMsg}}">
+          <view class="msg-item" wx:for="{{mymsg}}" wx:key="{{index}}">
+            <view class="title">系统消息</view>
+            <text selectable="true">{{item.content}}</text>
+          </view>
+      </view>
+   </block>
    <!-- @mineColse.user="closePopup" -->
     <Popup class="mine-popup-view" wx:if="{{PopupisShow}}" @mineColse.user="closePopup" :PopupShow="PopupisShow">
         <view slot="content"></view>
@@ -128,7 +135,10 @@ export default class Mine extends wepy.component {
         active: false
       }
     ],
-    MyCollectlist: []
+    MyCollectlist: [],
+    myCollect:true,
+    myMsg:false,
+    mymsg:[]
   };
 
   props = {
@@ -147,6 +157,7 @@ export default class Mine extends wepy.component {
   }
 
   methods = {
+     
     async changeCollectNav(e) {
       let that = this;
       let idx = e.currentTarget.dataset.idx;
@@ -160,6 +171,25 @@ export default class Mine extends wepy.component {
       that.collectNav = collectNav;
       that.mineNav = collectNav[idx].id;
       that.$parent.mineNav = collectNav[idx].id;
+      that.$apply();
+    },
+
+    // 点击收藏
+    clickCollect(){
+         let that = this;
+         that.myCollect = true;
+         that.myMsg = false;
+         that.$apply();
+     },
+
+    //  点击消息
+    async clickMsg(){
+      let that = this;
+      that.myCollect = false;
+      that.myMsg = true;
+      let mymsg = await wxRequest({},api.myMessage);
+      console.log('我的消息',mymsg);
+      that.mymsg = mymsg.data;
       that.$apply();
     },
 
@@ -218,6 +248,7 @@ export default class Mine extends wepy.component {
   height: 616rpx;
   position: relative;
   overflow: hidden;
+  background: #333;
   .avatar {
     width: 258rpx;
     height: 258rpx;
@@ -415,6 +446,23 @@ export default class Mine extends wepy.component {
     height: 100%;
     background: rgba(0, 0, 0, .5);
     z-index: 8;
+}
+
+.my-msg{
+   width:750rpx;
+   .msg-item{
+     padding:20rpx;
+     text{
+       display: block;
+       font-size: 28rpx;
+       color:#666;
+       text-align: justify;
+     }
+   }
+   .title{
+      width:100%;
+      height: 40rpx;
+   }
 }
 
 </style>

@@ -10,7 +10,7 @@
         </view>
 
         <view class="list-top" wx:if="{{listBordsIndex=='1'}}">
-            <view class="second">
+            <view class="second" wx:if="{{listBordsData[1].avatar}}">
                <view class="avatar">
                     <image mode="widthFix" src="{{listBordsData[1].avatar}}"></image>
                </view> 
@@ -21,7 +21,7 @@
                      @tap="playWeekListMusic"
                      data-idx="1">{{listBordsData[1].music_name}}</view>
             </view>
-            <view class="first">
+            <view class="first" wx:if="{{listBordsData[1].avatar}}">
                <view class="avatar">
                     <image mode="widthFix" src="{{listBordsData[0].avatar}}"></image>
                </view> 
@@ -32,7 +32,7 @@
                      @tap="playWeekListMusic"
                      data-idx="0">{{listBordsData[0].music_name}}</view>
             </view>
-            <view class="third">
+            <view class="third" wx:if="{{listBordsData[1].avatar}}">
                <view class="avatar"><image mode="widthFix" src="{{listBordsData[2].avatar}}"></image></view> 
                <view class="flower" @tap="sendWeekFlower" 
                                     data-id="{{listBordsData[2].id}}" 
@@ -44,7 +44,7 @@
         </view>
 
         <view class="list-top" wx:if="{{listBordsIndex=='2'}}">
-            <view class="second">
+            <view class="second" wx:if="{{monthBordsData[1].avatar}}">
                <view class="avatar"><image mode="widthFix" src="{{monthBordsData[1].avatar}}"></image></view> 
                <view class="flower" @tap="sendMonthFlower" 
                                     data-id="{{monthBordsData[1].id}}"
@@ -53,7 +53,7 @@
                      @tap="playMonthListMusic"
                      data-idx="1">{{monthBordsData[1].music_name}}</view>
             </view>
-            <view class="first">
+            <view class="first"  wx:if="{{monthBordsData[1].avatar}}">
                <view class="avatar"><image mode="widthFix" src="{{monthBordsData[0].avatar}}"></image></view> 
                <view class="flower" @tap="sendMonthFlower" 
                                     data-id="{{monthBordsData[0].id}}"
@@ -62,7 +62,7 @@
                      @tap="playMonthListMusic"
                      data-idx="0">{{monthBordsData[0].music_name}}</view>
             </view>
-            <view class="third">
+            <view class="third"  wx:if="{{monthBordsData[1].avatar}}">
                <view class="avatar">
                    <image mode="widthFix" src="{{monthBordsData[2].avatar}}"></image>
                </view> 
@@ -142,35 +142,23 @@ export default class listBords extends wepy.component {
     MusicBar: MusicBar
   };
 
+  props = {
+     currentMusic:{
+       twoWay:true
+     },
+     musicBarWidth:{
+       twoWay:true
+     },
+     monthBordsData:{
+       twoWay:true
+     },
+     listBordsData:{
+       twoWay:true
+     }
+  }
+
   data = {
-    currentMusic: {
-      status: false,
-      isplay: true,
-      background: "#fff",
-      isCollect: true,
-      name: "测试歌名",
-      author: "测试作者",
-      cover: "http://iph.href.lu/88x88?text=测试封面",
-      lyrics: [
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1",
-        "测试歌词1"
-      ]
-    },
+    currentMusic: {},
     listnav: [
       {
         text: "周榜",
@@ -185,7 +173,8 @@ export default class listBords extends wepy.component {
     ],
     listBordsData: [],
     listBordsIndex: 1,
-    monthBordsData: []
+    monthBordsData: [],
+    musicBarWidth:0
   };
 
   methods = {
@@ -233,7 +222,13 @@ export default class listBords extends wepy.component {
         let idx = e.currentTarget.dataset.idx;
         let oldList = wx.getStorageSync('oldList');
         let newList = that.listBordsData;
-        wx.setStorageSync('oldList', newList)
+        wx.setStorageSync('oldList', newList);
+        that.currentMusic = newList[idx];
+        that.$parent.currentMusic = newList[idx];
+        that.$parent.musicBarWidth = 0;
+        that.musicBarWidth = 0;
+        console.log('that.$parent',that.$parent)
+        that.$apply();
         playMusic({
             oldList:oldList,
             newList:newList,
@@ -250,6 +245,9 @@ export default class listBords extends wepy.component {
         let oldList = wx.getStorageSync('oldList');
         let newList = that.monthBordsData;
         wx.setStorageSync('oldList',newList)
+        that.currentMusic =  newList[idx];
+        that.$parent.currentMusic = newList[idx];
+        that.$apply();
         playMusic({
             oldList:oldList,
             newList:newList,
@@ -307,23 +305,23 @@ export default class listBords extends wepy.component {
     }
 
   async onLoad() {
-    console.log("listbords加载了");
-    let that = this;
-    let json = await wxRequest({}, api.weekFlowerRanking);
-    let monthData = await wxRequest({}, api.moonthFlowerRanking);
-    console.log("月榜数据", monthData.data);
-    console.log("周榜数据", json.data);
-    let listBordsData = json.data;
-    let monthBordsData = monthData.data;
-    listBordsData.map((element,index)=>{
-        element.flower = that.fromFlower(element.flower);
-    });
-    monthBordsData.map((element,index)=>{
-        element.flower = that.fromFlower(element.flower);
-    });
-    this.listBordsData = listBordsData;
-    this.monthBordsData = monthBordsData;
-    this.$apply();
+    // console.log("listbords加载了");
+    // let that = this;
+    // let json = await wxRequest({}, api.weekFlowerRanking);
+    // let monthData = await wxRequest({}, api.moonthFlowerRanking);
+    // console.log("月榜数据", monthData.data);
+    // console.log("周榜数据", json.data);
+    // let listBordsData = json.data;
+    // let monthBordsData = monthData.data;
+    // listBordsData.map((element,index)=>{
+    //     element.flower = that.fromFlower(element.flower);
+    // });
+    // monthBordsData.map((element,index)=>{
+    //     element.flower = that.fromFlower(element.flower);
+    // });
+    // this.listBordsData = listBordsData;
+    // this.monthBordsData = monthBordsData;
+    // this.$apply();
   }
 }
 </script>

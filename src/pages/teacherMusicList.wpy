@@ -51,7 +51,13 @@ export default class teacherMusicList extends wepy.page{
            let oldList = wx.getStorageSync('oldList');
            let newList = that.music;
            let idx = e.currentTarget.dataset.idx;
-           wx.setStorageSync('oldList', newList)
+           let currentMusic = newList[idx];
+           wx.setStorageSync('currentMusic',currentMusic)
+           wx.setStorageSync('oldList', newList);
+           currentMusic.background = '#fff';
+           currentMusic.playing = 1;
+           that.currentMusic = currentMusic;
+           that.$apply();
            playMusic({
                oldList:oldList,
                newList:newList,

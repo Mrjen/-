@@ -90,6 +90,9 @@ export default class Teacher extends wepy.component {
     childtearchData: {
       twoWay: true
     },
+    officialData:{
+      twoWay: true
+    },
     teachNav: {
       twoWay: true
     },
@@ -120,6 +123,12 @@ export default class Teacher extends wepy.component {
     teacherItem: teacherItem,
     musicBar: musicBar
   };
+
+  watch = {
+     childtearchData(newValue, oldValue){
+       console.log(`teachNav value: ${oldValue} -> ${newValue}`)
+    }
+  }
 
   methods = {
     //   进入老师详情页
@@ -211,15 +220,11 @@ export default class Teacher extends wepy.component {
   };
 
   async onLoad() {
-    let json = await wxRequest({query: {page: 0}},api.teacherList);
-    let office = await wxRequest({query: {page: 0}},api.official);
-    console.log("官方频道", office.data);
-    console.log("老师频道", json.data);
-    this.childtearchData = json.data;
-    this.officialData = office.data;    
-    this.$parent.childtearchData = json.data;
-    this.$parent.officialData = office.data;
-    this.$apply();
+      
+  }
+
+  onReady(){
+     
   }
 }
 </script>

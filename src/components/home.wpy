@@ -320,9 +320,8 @@ page{
       </view>
 
       <view class="music-view">
-          <view class="music-name">{{currentMusic.name}}</view>
+          <view class="music-name">{{currentMusic.music_name}}</view>
           <view class="lyrics">
-            {{LyHeight}}
              <view class="lyrics-box" style="transform:translateY({{-LyHeight+'px'}})">
                  <view wx:for="{{currentMusic.word}}" 
                     wx:key="id"
@@ -407,8 +406,8 @@ page{
                <view class="popup-content">恭喜亲，您助力的老师获得周冠军</view>
                <view class="popup-content">领取助力奖励</view>
                <view class="popup-content">复制下方中奖码</view>
-               <view class="popup-num">334364436</view>
-               <view class="sure-btn">点击复制</view>
+               <view class="popup-num">{{winCode}}</view>
+               <view class="sure-btn" @tap="copyWinCode" data-code="{{winCode}}">点击复制</view>
                <view class="popu-colse" @tap="closeWinPopup"></view>
            </view>
        </view>
@@ -449,19 +448,36 @@ export default class Home extends wepy.component {
     musicBarWidth: 0, //音乐进度条
     musicSatatus: 1, //后台音乐播放状态 1播放 0 暂停
     winPopup:false,
-    dayPopup:false
+    dayPopup:false,
+    currentTab:4,
+    winCode:"", //中奖码
+    widthLytime:"",  //音乐进度条定时器
+    time:"" //歌词滚动定时器
   };
 
   props = {
-    animationData: {}
+    animationData: {},
+    currentMusic:{
+      twoWay:true
+    },
+    musicBarWidth:{
+      twoWay:true
+    },
+    LyHeight:{
+      twoWay:true
+    },
+    winPopup:{
+      twoWay:true
+    },
+    winCode:{
+      twoWay:true
+    }
   };
 
   events = {};
 
-  onReady() {}
-
   onShow(){
-      this.currentTab = 0;
+      this.currentTab = 4;
       console.log("页面显示了",this.currentTab);
       this.$invoke('../components/tab', 'tabber','1');
       this.$invoke('message', 'loadMessage');
@@ -514,11 +530,14 @@ export default class Home extends wepy.component {
       }
       console.log('midx2',midx)
       wx.setStorageSync("midx", midx);
-
       that.currentMusic = music[midx];
-      console.log('currentMusic',music[midx])
+      let currentMusic = music[midx];
+      console.log('currentMusic',music[midx]);
+      wx.setStorageSync('currentMusic',currentMusic)
       that.$apply();
       let oldList = wx.getStorageSync("oldList");
+      let scale = 0;
+      getLyHeight(currentMusic,that,scale)
       playMusic({
         oldList: oldList,
         newList: "",
@@ -542,9 +561,12 @@ export default class Home extends wepy.component {
       }
       console.log('midx4',midx)
       wx.setStorageSync("midx", midx);
+      let currentMusic = music[midx];
       that.currentMusic = music[midx];
       that.$apply();
       let oldList = wx.getStorageSync("oldList");
+      let scale = 0;
+      getLyHeight(currentMusic,that,scale)
       playMusic({
         oldList: oldList,
         newList: "",
@@ -590,6 +612,7 @@ export default class Home extends wepy.component {
           }
        },api.Addflower);
        console.log(json.data)
+      
        if(json.data.status===0){
           wx.showToast({
             title: json.data.message,
@@ -615,46 +638,70 @@ export default class Home extends wepy.component {
     closeWinPopup(){
        this.winPopup = 0;
        this.$apply();
+    },
+    // 复制中奖码
+    copyWinCode(e){
+      let that = this;
+        wx.setClipboardData({
+          data:e.currentTarget.dataset.code,
+          success: function(res) {
+            that.winPopup = 0;
+            that.$apply();
+            wx.showModal({
+              title: '提示',
+              content: '中奖码已复制，请尽快找客服兑换',
+              success: function(res) {
+                if (res.confirm) {
+                  console.log('用户点击确定')
+                } else if (res.cancel) {
+                  console.log('用户点击取消')
+                }
+              }
+            })
+            wx.getClipboardData({
+              success: function(res) {
+                console.log(res.data) // data
+              }
+            })
+          }
+        })
     }
 
   };
 
   async onLoad() {
     let that = this;
+    let musicStatus = wx.getBackgroundAudioManager();
     let json = await wxRequest({}, api.Home);
+    let currentMusic = {};
     console.log(json.data);
     let music = json.data;
-    let currentMusic = music[0];
-    currentMusic.from_duration = formtime(currentMusic.duration, 1);
-    that.music = music;
-    that.$apply();
-    playMusic({
-      oldList: "",
-      newList: music,
-      changeList: true,
-      idx: 0,
-      cycle: true,
-      Dom: that,
-      Next: 0
-    });
-    wx.onBackgroundAudioPlay(function() {
-      getLyHeight(currentMusic, that, 0);
-    });
-    console.log("music[0]", music[0]);
-    that.currentMusic = currentMusic;
-    wx.setStorageSync("midx", 0);
-    wx.setStorageSync("oldList", music);
-    that.$apply();
-
-
-    //  获取中奖信息
-    const reward = await wxRequest({},api.weekReward);
-    console.log('获取中奖信息',reward.data);
-    if(reward.data.winner=='1'){
-        that.winPopup = 1;
-        that.$apply();
+    if(!musicStatus.paused){
+       currentMusic = music[0];
+       that.music = music;
+       that.$apply();
+        playMusic({
+          oldList: "",
+          newList: music,
+          changeList: true,
+          idx: 0,
+          cycle: true,
+          Dom: that,
+          Next: 0
+        });
+      wx.onBackgroundAudioPlay(function() {
+        getLyHeight(currentMusic, that, 0);
+      });
+      that.currentMusic = currentMusic;
+      that.$apply();
+      wx.setStorageSync("midx", 0);
+      wx.setStorageSync("oldList", music);
+    }else{
+       currentMusic = wx.getStorageSync('currentMusic');
+       that.currentMusic = currentMusic;
+       that.$apply();
     }
-
+  
     //获取今日是否提醒送花
     let _date = null;
     let popupdate = wx.getStorageSync('popupdate');
@@ -664,13 +711,15 @@ export default class Home extends wepy.component {
        wx.setStorageSync('popupdate', popupdate);
     }
 
-    if(_date!=popupdate){
+    if(_date!==popupdate){
         //弹提示送花弹窗
        if(that.winPopup != 1){
           that.dayPopup = 1;
           that.$apply();
        }
     }
+
+
   }
   onShareAppMessage() {
     return {};

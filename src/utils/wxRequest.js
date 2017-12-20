@@ -1,6 +1,6 @@
 import wepy from 'wepy'
 
-const wxRequest = (params={},url) => {
+const wxRequest = (params={},url,storageCookie) => {
     return new Promise(function(resolve,reject){
         wepy.showToast({
             title:'加载中',
@@ -9,8 +9,7 @@ const wxRequest = (params={},url) => {
         let data = params.query || {};
         let extConfig = wx.getExtConfigSync ? wx.getExtConfigSync() : {}
         // console.log("kid",extConfig.kid)
-        data.kid = extConfig.kid?extConfig.kid:'497';
-
+        data.kid = extConfig.kid?extConfig.kid:'459';
         let Cookie = wx.getStorageSync('Cookie');
         // console.log('cookie',Cookie);
         var args = {
@@ -22,7 +21,10 @@ const wxRequest = (params={},url) => {
                     let mode = /(PHPSESSID=.*);/;
                     let cookie = res.header['Set-Cookie'].match(mode)[1];
                     console.log(cookie)
-                    wx.setStorageSync('Cookie', cookie);
+                    if(storageCookie){
+                        wx.setStorageSync('Cookie', cookie);
+                    }
+                    
                 }catch(e){
 
                 }

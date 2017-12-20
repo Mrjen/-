@@ -8,7 +8,7 @@
           <view class="music-info">
               <view class="info">
                   <view class="music-name"
-                        style="color:{{currentMusic.background=='#fff'?'#000':'#fff'}}">{{currentMusic.music_name}}{{currentMusic.collected}}</view>
+                        style="color:{{currentMusic.background=='#fff'?'#000':'#000'}}">{{currentMusic.music_name}}</view>
                   <view class="music-author">{{currentMusic.teacher_name}}</view>
               </view>
               <view class="option-view">
@@ -21,6 +21,7 @@
                             src="https://qncdn.playonwechat.com/banyeyinyue/music-bar-icon-baidi-play.png">
                         </image>
                     </view>
+
                     <view class="play-view baidi-collect">
                          <image wx:if="{{currentMusic.collected=='1'?1:0}}" 
                                 @tap="removeCollect"

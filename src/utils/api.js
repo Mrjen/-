@@ -40,6 +40,8 @@ const songPlayCount = apiUrl + '/music/App/play'
 const teachBanner = apiUrl + '/music/App/bannerlist'
 // 获取周中奖信息
 const weekReward = apiUrl + '/music/App/weekReward'
+// 我的消息
+const myMessage = apiUrl + '/music/App/myMessage'
 
 
 
@@ -63,5 +65,6 @@ module.exports = {
     shareCode,
     songPlayCount,
     teachBanner,
-    weekReward
+    weekReward,
+    myMessage
 }

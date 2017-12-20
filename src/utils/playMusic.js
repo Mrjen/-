@@ -10,6 +10,7 @@ currentData = {
 }
  */
 
+import { getLyHeight } from './getLyHeight';
 
 function playMusic(currentData){
     let oldList = currentData.oldList;
@@ -29,9 +30,19 @@ function playMusic(currentData){
                 wx.onBackgroundAudioStop(function(){
                     let midx = wx.getStorageSync('midx');
                     midx = (midx+1==newList.length)?0:(midx+1);
+                    // 重置歌词进度条
+                    currentData.Dom.musicBarWidth = 0;
+                    currentData.Dom.$apply();
+
                     wx.setStorageSync('midx',midx);
                     let currentMusic = newList[midx];
-                    wx.setStorageSync('currentMusic',currentMusic)
+                    const _scale = (currentMusic.duration)/(currentMusic.word.length*50);
+                    console.log('_scale',_scale)
+                    getLyHeight(currentMusic,currentData.Dom,_scale);
+
+                    wx.setStorageSync('currentMusic',currentMusic);
+                    currentData.Dom.currentMusic = currentMusic;
+                    currentData.Dom.$apply();
                     wx.playBackgroundAudio({
                         dataUrl:newList[midx].audio,
                         title:newList[midx].music_name,
@@ -44,16 +55,36 @@ function playMusic(currentData){
         console.log('oldList',oldList)
         wx.setStorageSync('midx',i);
           console.log('oldlist23',oldList[i].audio);
+          currentData.Dom.musicBarWidth = 0;
+          currentData.Dom.$apply();
+          let currentMusic = oldList[i];
+          const _scale = (currentMusic.duration)/(currentMusic.word.length*50+5);
+          getLyHeight(currentMusic,currentData.Dom,_scale);
+
           wx.playBackgroundAudio({
             dataUrl:oldList[i].audio,
             title: oldList[i].music_name,
             success(res){
-                console.log(oldList[i].music_name)
-                let midx = wx.getStorageSync('midx');
-                wx.onBackgroundAudioStop(function(){
-
+                console.log(oldList[i].music_name);
+                wx.setStorageSync('currentMusic',oldList[i]);
+                wx.onBackgroundAudioStop(function(){                            
+                    let midx = wx.getStorageSync('midx');
+                    console.log('之前',midx)
+                    midx = ((midx+1)==newList.length)?0:(midx+1);
+                    console.log('之后',midx)
+                    currentMusic = oldList[midx];
+                    wx.setStorageSync('midx',midx)
+                    wx.playBackgroundAudio({
+                        dataUrl:oldList[midx].audio,
+                        title:oldList[midx].music_name,
+                        success(res){
+                            wx.setStorageSync('currentMusic',currentMusic);
+                            currentData.Dom.currentMusic = currentMusic;
+                            let _scale = 0;
+                            getLyHeight(currentMusic,currentData.Dom,_scale);
+                        }
+                    })
                 })
-                wx.setStorageSync('currentMusic',oldList[i])
             },
             fail(res){
                 console.log('fail',res)
@@ -82,6 +113,7 @@ function playMusic1(currentData){
                     dataUrl: oldList[i].audio,
                     title: oldList[i].name
                 });
+
                 wx.setStorageSync('currentSong',oldList[i])
             })
         } else {

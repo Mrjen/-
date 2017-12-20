@@ -51,6 +51,7 @@
 import wepy from "wepy"
 import {wxRequest} from '../utils/wxRequest.js'
 import api from '../utils/api.js'
+import { getLyHeight } from "../utils/getLyHeight.js";
 export default class Tab extends wepy.component {
   props = {
     active: {
@@ -61,23 +62,71 @@ export default class Tab extends wepy.component {
     },
     MineUserInfo:{
       twoWay: true
+    },
+    musicBarWidth:{
+      twoWay:true
+    },
+    LyHeight:{
+      twoWay:true
     }
   };
   data = {
       showTabBar:true,
-      MineUserInfo:{}
+      MineUserInfo:{},
+      musicBarWidth:0,
+      LyHeight:0
   };
+
+  //   格式化花的数量
+    fromFlower(prams){
+        if(prams>=1000&&prams<10000){
+            prams = (prams)/1000;
+            prams = prams.toFixed(1) + 'k';
+        }else if(prams>=10000){
+            prams = (prams)/10000;
+            prams = prams.toFixed(1) + 'w';
+        }
+        return prams;
+    }
 
   methods = {
     async change(e) {
       console.log('页面的index',e.currentTarget.dataset.idx);
+      let that = this;
       let pageIndex = e.currentTarget.dataset.idx;
       this.$parent.page = 1;
       this.active = pageIndex;
+      wx.setStorageSync('currentTab',pageIndex);
       let json = await wxRequest({query:{page:0}},api.myCollect);
       let teach = await wxRequest({query:{page:0}},api.myCollectTeacher);
       this.$parent.MyCollectlist = json.data;
       this.$parent.MyCollectTeacher = teach.data;
+      
+      if(pageIndex=='0'){
+          let json = await wxRequest({query: {page: 0}},api.teacherList);
+          let office = await wxRequest({query: {page: 0}},api.official);
+          console.log("官方频道", office.data);
+          console.log("老师频道", json.data);
+          that.childtearchData = json.data;
+          that.officialData = office.data;    
+          that.$parent.tearchData = json.data;
+          that.$parent.officialData = office.data;
+          console.log(that.$parent)
+          that.$apply();
+          console.log('老师频道数据更新了')
+      }
+
+      if(pageIndex=='1'){
+          let that = this;
+          let json = await wxRequest({query:{page:0}},api.delicateAndMusics);
+          console.log('音乐页面数据',json.data)
+          that.delicate = json.data.delicate;
+          that.musicListData = json.data.musices;
+          that.$parent.musicListData = json.data.musices;
+          that.$apply();
+          console.log('音乐页面数据跟新')
+      }
+
       // 在这加载用户信息
       if(pageIndex=='4'){
           let userInfo = wx.getStorageSync('userInfo');
@@ -89,13 +138,46 @@ export default class Tab extends wepy.component {
       }
       if(pageIndex=='2'){
          console.log("点击首页");
-         let playMusicStatus = wx.getStorageSync('playMusicStatus');
-         if(playMusicStatus){
-            this.$parent.playMusicStatus = playMusicStatus;
+         let _status = wx.getBackgroundAudioManager();
+         if(!_status.paused){
+            console.log("后台音乐在播放");
+            this.$parent.musicStatus = 1;
+            let currentMusic = wx.getStorageSync('currentMusic');
+            console.log('currentMusic',currentMusic)
+            const _scale = (currentMusic.duration)/(currentMusic.word.length*50+5);
+            this.$parent.currentMusic = currentMusic;
+            this.currentMusic = currentMusic;
+            getLyHeight(currentMusic,that,_scale);
+            console.log('this.$parent',this.$parent)
+            this.$apply();
          }
       }
+
+      if(pageIndex=='3'){
+        console.log('点击排行榜')
+        let json = await wxRequest({}, api.weekFlowerRanking);
+        let monthData = await wxRequest({}, api.moonthFlowerRanking);
+        console.log("月榜数据", monthData.data);
+        console.log("周榜数据", json.data);
+        let listBordsData = json.data;
+        let monthBordsData = monthData.data;
+        listBordsData.map((element,index)=>{
+            element.flower = that.fromFlower(element.flower);
+        });
+        monthBordsData.map((element,index)=>{
+            element.flower = that.fromFlower(element.flower);
+        });
+        that.listBordsData = listBordsData;
+        that.$parent.listBordsData = listBordsData;
+        that.monthBordsData = monthBordsData;
+        that.$parent.monthBordsData = monthBordsData;
+        that.$apply();
+        console.log('这里重新加载排行榜数据')
+      }
       
-      this.$apply();
+      
+
+      that.$apply();
     },
     tabbarUp() {
       // console.log("tabbarUp点击了");
@@ -104,7 +186,7 @@ export default class Tab extends wepy.component {
             duration: 1000,
             timingFunction: "ease"
           });
-          animation.translateY(-102).step();
+          animation.translateY(-100).step();
           that.animationData = animation.export();
           that.showTabBar = false;
           that.$apply();

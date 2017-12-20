@@ -9,13 +9,23 @@
                    :officialData.sync="officialData"></Teacher>
       </view>
       <view class="tab_item tab_contact" hidden="{{currentTab != 1}}">
-          <musicList :musicListData.sync="musicListData"></musicList>
+          <musicList :musicListData.sync="musicListData"
+                     :musicBarWidth.sync="musicBarWidth"
+                     :currentMusic.sync="currentMusic"
+                     ></musicList>
       </view>
       <view class="tab_item tab_discovery" hidden="{{currentTab != 2}}">
-          <Home></Home>
+          <Home :currentMusic.sync="currentMusic" 
+                :musicBarWidth.sync="musicBarWidth"
+                :winPopup.sync="winPopup"
+                :winCode.sync="winCode"
+                :LyHeight.sync="LyHeight"></Home>
       </view>
       <view class="tab_item tab_me" hidden="{{currentTab != 3}}">
-          <listBords></listBords>
+          <listBords :currentMusic.sync="currentMusic"
+                     :musicBarWidth.sync="musicBarWidth"
+                     :listBordsData.sync="listBordsData"
+                     :monthBordsData.sync="monthBordsData"></listBords>
       </view>
       <view class="tab_item tab_mine" wx:if="{{currentTab == 4}}">
           <Mine :mineNav.sync="mineNav" 
@@ -27,7 +37,9 @@
 
         <tab :active="currentTab" 
              :animationData="animationData" 
-             :MineUserInfo.sync="MineUserInfo" ></tab>
+             :MineUserInfo.sync="MineUserInfo"
+             :musicBarWidth.sync="musicBarWidth"
+             :LyHeight.sync="LyHeight"></tab>
       </view>
 </template>
 
@@ -49,6 +61,7 @@ import { playMusic } from "../utils/playMusic.js";
 import { getLyHeight } from "../utils/getLyHeight.js";
 import { formtime } from "../utils/utils.js";
 import Tab from '../components/tab'
+import { getUserMsg } from '../utils/getUserMsg.js'
 export default class Index extends wepy.page {
   config = {
    
@@ -68,9 +81,14 @@ export default class Index extends wepy.page {
     currentMusic: [],    // 当前播放音乐
     LyHeight: 0,         // 歌词高度
     musicBarWidth: 0,    //音乐进度条
-    currentTab:1,        //默认显示主页
+    currentTab:2,        //默认显示主页
     musicSatatus: 1,     //后台音乐播放状态 1播放 0 暂停
-    musicListData:[]     //音乐页面数据
+    musicListData:[],     //音乐页面数据
+    musicStatus:"",       //背景音乐播放状态 true 正在播放 false没有播放
+    monthBordsData:[],    //月榜数据
+    listBordsData:[],      //周榜数据
+    winPopup:0,             //中奖弹窗是否显示
+    winCode:""             //中奖码
   };
 
   watch = {
@@ -103,12 +121,10 @@ export default class Index extends wepy.page {
 
   events = {};
 
-  onReady() {}
-
   onShow(){
-      let currentTab = wx.getStorageSync('currentTab');
-      this.currentTab = currentTab?currentTab:0;
-      this.$apply();
+      // let currentTab = wx.getStorageSync('currentTab');
+      // this.currentTab = currentTab?currentTab:0;
+      // this.$apply();
   }
 
   methods = {
@@ -116,35 +132,16 @@ export default class Index extends wepy.page {
   };
 
   async onLoad() {
-     wx.setStorageSync('currentTab',0);
+    let that = this;
+     that.active = currentTab;
      setTimeout(() => {
+         getUserMsg();
          let musicStatus = wx.getBackgroundAudioManager();
          console.log(musicStatus.paused);
          if(musicStatus.paused===false){
             wx.setStorageSync('musicStatus',1); //缓存音乐播放状态 1 播放中 2 暂停中 3 停止了
          }
      }, 100);
-
-    //  获取中奖信息
-    const reward = await wxRequest({},api.weekReward);
-    console.log('获取中奖信息',reward.data);
-    if(reward.data.winner=='1'){
-       
-    }
-
-    //获取今日是否提醒送花
-    let _date = null;
-    let popupdate = wx.getStorageSync('popupdate');
-    if(!popupdate){
-       _date = new Date();
-       popupdate = _date.getDate();
-       wx.setStorageSync('popupdate', popupdate);
-    }
-
-    if(_date!=popupdate){
-        //弹提示送花弹窗
-    }
-
      
   }
 
@@ -183,7 +180,6 @@ export default class Index extends wepy.page {
                     }else{
                        that.officialData = oldData;
                     }
-                    
                     that.$apply();
               })
         }
@@ -211,6 +207,22 @@ export default class Index extends wepy.page {
        console.log('加载我的页面数据');
 
      }
+  }
+
+  onReady(){
+    console.log('页面onReady')
+    //  获取中奖信息
+    setTimeout(async() => {
+      const reward = await wxRequest({},api.weekReward);
+       console.log('获取中奖信息',reward.data);
+      if(reward.data.winner=='1'){
+        that.winPopup = 1;
+        that.winCode = reward.data.code;
+        that.$apply();
+       }
+    }, 2000);
+    
+
   }
 
   onShareAppMessage() {
